@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.github.com;">
 <title>tracker &middot; oasisss</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -99,9 +99,40 @@ button{cursor:pointer;border:none;background:none}
 .ExportOut.Shown{display:block}
 .ExportRow{display:flex;gap:.6rem;flex-wrap:wrap}
 .Flash{font-size:.76rem;color:var(--Green);margin-top:.6rem;min-height:1rem}
-</style>
+
+.Gate{position:fixed;inset:0;z-index:500;background:var(--Bg);display:flex;align-items:center;justify-content:center;padding:1.4rem}
+.Gate.Hidden{display:none}
+.GateBox{width:100%;max-width:340px;background:var(--Surface);border:1px solid var(--Border);border-radius:14px;padding:1.5rem}
+.GateBox h1{font-family:'Outfit',sans-serif;font-size:1.25rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.4rem}
+.GateBox p{font-size:.8rem;color:var(--TextDim);line-height:1.6;margin-bottom:1.1rem}
+.GateNote{font-size:.74rem;color:var(--TextDim);line-height:1.55;margin-top:.9rem;margin-bottom:0}
+.GateError{font-size:.76rem;color:var(--Red);min-height:1rem;margin-top:.6rem}
+.Vault{display:none}
+.Vault.Shown{display:block}
+
+.Publish{background:var(--Surface);border:1px solid var(--Border);border-radius:12px;padding:1.1rem;margin-top:1.6rem}
+.Publish.Armed{border-color:var(--AccentDim);background:linear-gradient(180deg,rgba(139,92,246,.06),var(--Surface))}
+.Publish h2{font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:.4rem}
+.Publish p{font-size:.8rem;color:var(--TextDim);line-height:1.6;margin-bottom:.9rem}
+.PublishRow{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.PublishRow .Btn{width:auto;flex:1 1 auto}
+.PublishState{font-size:.74rem;color:var(--TextDim);margin-top:.7rem;min-height:1rem;line-height:1.5}
+.PublishState.Bad{color:var(--Red)}
+.Gone{display:none}
 </head>
 <body>
+
+<div class="Gate Hidden" id="Gate">
+<div class="GateBox">
+<h1>locked</h1>
+<p>enter your password to unlock the tracker and publish to the site.</p>
+<input class="Field" id="UnlockPassword" type="password" placeholder="password" autocomplete="current-password">
+<button class="Btn BtnPrimary" id="UnlockBtn">unlock</button>
+<div class="GateError" id="GateError"></div>
+<p class="GateNote">there is no reset. if the password is gone, clear the saved token and connect github again with a new one.</p>
+<button class="Btn BtnGhost" id="ForgetBtn">clear saved token</button>
+</div>
+</div>
 
 <div class="Shell">
 
@@ -109,7 +140,7 @@ button{cursor:pointer;border:none;background:none}
 <h1>commission tracker</h1>
 <a href="index.html">back to site</a>
 </div>
-<p class="Lede">private to this browser. nothing here is uploaded anywhere. track time and tasks as you work, then hit export and paste the block into index.html when you want the public board updated.</p>
+<p class="Lede">private to this browser. track time and tasks as you work, then publish when you want the public board updated.</p>
 
 <div class="Totals">
 <div class="TotalCard">
@@ -135,9 +166,28 @@ button{cursor:pointer;border:none;background:none}
 
 <div id="JobList"></div>
 
+<div class="Publish" id="Publish">
+<h2>publish to site</h2>
+<p id="PublishLede">connect github once, then this pushes the board straight to the live site.</p>
+
+<div id="ConnectForm">
+<input class="Field" id="SetupToken" type="password" placeholder="github token" autocomplete="off" spellcheck="false">
+<input class="Field" id="SetupPassword" type="password" placeholder="new password" autocomplete="new-password">
+<input class="Field" id="SetupConfirm" type="password" placeholder="repeat password" autocomplete="new-password">
+<button class="Btn BtnPrimary" id="ConnectBtn">save and connect</button>
+</div>
+
+<div class="PublishRow Gone" id="PublishRow">
+<button class="Btn BtnPrimary" id="PublishBtn">publish to site</button>
+<button class="Btn BtnGhost" id="LockBtn">lock</button>
+</div>
+
+<div class="PublishState" id="PublishState"></div>
+</div>
+
 <div class="ExportBox">
-<h2>export to site</h2>
-<p>this rebuilds the ActiveCommissions block in index.html. copy it, then replace the existing block in your file and commit.</p>
+<h2>manual copy</h2>
+<p>only needed if publishing is down or the token expired. this is the contents of Commissions.json, paste it into that file on github.</p>
 <textarea class="ExportOut" id="ExportOut" readonly spellcheck="false"></textarea>
 <div class="ExportRow">
 <button class="Btn BtnGhost" id="ExportBtn">generate</button>
@@ -151,9 +201,16 @@ button{cursor:pointer;border:none;background:none}
 
 <script>
 const StorageKey = "OasisTrackerV1";
+const VaultKey = "OasisPublishV1";
+const PublishedKey = "OasisPublishedAtV1";
+const RepoOwner = "O9LynxW";
+const RepoName = "oasisweb";
+const RepoBranch = "main";
+const DataPath = "Commissions.json";
 const TickIcon = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6.4l2.6 2.6L10 3.4"/></svg>';
 
 let Jobs = [];
+let PublishToken = null;
 
 function LoadJobs() {
 try {
@@ -451,7 +508,9 @@ if (Element) { Element.textContent = FormatClock(ElapsedFor(Job)); }
 }
 
 function BuildExport() {
-const Payload = Jobs
+return JSON.stringify({
+UpdatedAt: new Date().toISOString(),
+Jobs: Jobs
 .filter(function (Job) { return Job.Status !== "Hidden"; })
 .map(function (Job) {
 return {
@@ -463,28 +522,234 @@ Tasks: Job.Tasks.map(function (Task) {
 return { Label: Task.Label, Done: Boolean(Task.Done) };
 })
 };
-});
-
-const Lines = ["const ActiveCommissions = ["];
-Payload.forEach(function (Job, Index) {
-Lines.push("{");
-Lines.push('Project: ' + JSON.stringify(Job.Project) + ',');
-Lines.push('Client: ' + JSON.stringify(Job.Client) + ',');
-Lines.push('Status: ' + JSON.stringify(Job.Status) + ',');
-Lines.push('LoggedSeconds: ' + Job.LoggedSeconds + ',');
-if (Job.Tasks.length === 0) {
-Lines.push('Tasks: []');
-} else {
-Lines.push('Tasks: [');
-Job.Tasks.forEach(function (Task, TaskIndex) {
-Lines.push('{ Label: ' + JSON.stringify(Task.Label) + ', Done: ' + Task.Done + ' }' + (TaskIndex === Job.Tasks.length - 1 ? "" : ","));
-});
-Lines.push(']');
+})
+}, null, 1);
 }
-Lines.push("}" + (Index === Payload.length - 1 ? "" : ","));
+
+function CryptoReady() {
+return Boolean(window.isSecureContext && window.crypto && window.crypto.subtle);
+}
+
+function ToBase64(Bytes) {
+let Text = "";
+for (let Index = 0; Index < Bytes.length; Index += 1) { Text += String.fromCharCode(Bytes[Index]); }
+return window.btoa(Text);
+}
+
+function FromBase64(Text) {
+const Binary = window.atob(Text);
+const Bytes = new Uint8Array(Binary.length);
+for (let Index = 0; Index < Binary.length; Index += 1) { Bytes[Index] = Binary.charCodeAt(Index); }
+return Bytes;
+}
+
+function DeriveKey(Password, Salt) {
+return window.crypto.subtle
+.importKey("raw", new TextEncoder().encode(Password), "PBKDF2", false, ["deriveKey"])
+.then(function (Material) {
+return window.crypto.subtle.deriveKey(
+{ name: "PBKDF2", salt: Salt, iterations: 600000, hash: "SHA-256" },
+Material,
+{ name: "AES-GCM", length: 256 },
+false,
+["encrypt", "decrypt"]
+);
 });
-Lines.push("];");
-return Lines.join("\n");
+}
+
+function ReadVault() {
+try {
+const Raw = window.localStorage.getItem(VaultKey);
+if (!Raw) { return null; }
+const Parsed = JSON.parse(Raw);
+if (!Parsed || !Parsed.Salt || !Parsed.Iv || !Parsed.Cipher) { return null; }
+return Parsed;
+} catch (Error) {
+return null;
+}
+}
+
+function StoreToken(Token, Password) {
+const Salt = window.crypto.getRandomValues(new Uint8Array(16));
+const Iv = window.crypto.getRandomValues(new Uint8Array(12));
+return DeriveKey(Password, Salt)
+.then(function (Key) {
+return window.crypto.subtle.encrypt({ name: "AES-GCM", iv: Iv }, Key, new TextEncoder().encode(Token));
+})
+.then(function (Cipher) {
+window.localStorage.setItem(VaultKey, JSON.stringify({
+Salt: ToBase64(Salt),
+Iv: ToBase64(Iv),
+Cipher: ToBase64(new Uint8Array(Cipher))
+}));
+});
+}
+
+function UnlockToken(Password) {
+const Vault = ReadVault();
+if (!Vault) { return Promise.reject(new Error("nothing saved")); }
+return DeriveKey(Password, FromBase64(Vault.Salt))
+.then(function (Key) {
+return window.crypto.subtle.decrypt({ name: "AES-GCM", iv: FromBase64(Vault.Iv) }, Key, FromBase64(Vault.Cipher));
+})
+.then(function (Plain) { return new TextDecoder().decode(Plain); });
+}
+
+function SetPublishState(Message, IsError) {
+const Element = document.getElementById("PublishState");
+Element.classList.toggle("Bad", Boolean(IsError));
+Element.textContent = Message;
+}
+
+function LastPublishNote() {
+const Raw = window.localStorage.getItem(PublishedKey);
+const When = Number(Raw);
+if (!Raw || !Number.isFinite(When)) { return "not published from here yet"; }
+const Minutes = Math.floor((Date.now() - When) / 60000);
+if (Minutes < 1) { return "published just now"; }
+if (Minutes < 60) { return "published " + Minutes + "m ago"; }
+const Hours = Math.floor(Minutes / 60);
+if (Hours < 24) { return "published " + Hours + "h ago"; }
+return "published " + Math.floor(Hours / 24) + "d ago";
+}
+
+function RenderPublish() {
+const Box = document.getElementById("Publish");
+const Form = document.getElementById("ConnectForm");
+const Row = document.getElementById("PublishRow");
+const Lede = document.getElementById("PublishLede");
+
+if (!CryptoReady()) {
+Form.classList.add("Gone");
+Row.classList.add("Gone");
+Lede.textContent = "publishing needs the https version of the site. open it through your github pages link, not as a local file.";
+return;
+}
+
+const Connected = PublishToken !== null;
+Form.classList.toggle("Gone", Connected);
+Row.classList.toggle("Gone", !Connected);
+Box.classList.toggle("Armed", Connected);
+Lede.textContent = Connected
+? "pushes the board to " + RepoOwner + "/" + RepoName + ". the site updates about a minute later."
+: "connect github once, then this pushes the board straight to the live site.";
+if (Connected) { SetPublishState(LastPublishNote()); } else { SetPublishState(""); }
+}
+
+function DataUrl() {
+return "https://api.github.com/repos/" + RepoOwner + "/" + RepoName + "/contents/" + DataPath;
+}
+
+function GithubHeaders() {
+return {
+"Authorization": "Bearer " + PublishToken,
+"Accept": "application/vnd.github+json",
+"X-GitHub-Api-Version": "2022-11-28",
+"Content-Type": "application/json"
+};
+}
+
+function FetchCurrentSha() {
+return fetch(DataUrl() + "?ref=" + RepoBranch, { headers: GithubHeaders(), cache: "no-store" })
+.then(function (Response) {
+if (Response.status === 404) { return null; }
+if (Response.status === 401) { throw new Error("github rejected the token, it may have expired"); }
+if (!Response.ok) { throw new Error("github returned " + Response.status); }
+return Response.json();
+})
+.then(function (Payload) { return Payload ? Payload.sha : null; });
+}
+
+function Publish() {
+if (PublishToken === null) { return; }
+const Button = document.getElementById("PublishBtn");
+Button.disabled = true;
+SetPublishState("publishing...");
+
+const Body = BuildExport();
+FetchCurrentSha()
+.then(function (Sha) {
+const Request = {
+message: "update commissions",
+content: ToBase64(new TextEncoder().encode(Body)),
+branch: RepoBranch
+};
+if (Sha) { Request.sha = Sha; }
+return fetch(DataUrl(), { method: "PUT", headers: GithubHeaders(), body: JSON.stringify(Request) });
+})
+.then(function (Response) {
+if (Response.ok) { return null; }
+return Response.json()
+.catch(function () { return {}; })
+.then(function (Payload) { throw new Error(Payload.message || ("github returned " + Response.status)); });
+})
+.then(function () {
+window.localStorage.setItem(PublishedKey, String(Date.now()));
+SetPublishState("published, live on the site in about a minute");
+})
+.catch(function (Error) {
+SetPublishState(Error.message || "publish failed", true);
+})
+.then(function () { Button.disabled = false; });
+}
+
+function Connect() {
+const Token = document.getElementById("SetupToken").value.trim();
+const Password = document.getElementById("SetupPassword").value;
+const Confirm = document.getElementById("SetupConfirm").value;
+
+if (Token === "") { SetPublishState("paste your github token first", true); return; }
+if (Password.length < 8) { SetPublishState("password needs at least 8 characters", true); return; }
+if (Password !== Confirm) { SetPublishState("the two passwords do not match", true); return; }
+
+SetPublishState("saving...");
+StoreToken(Token, Password)
+.then(function () {
+PublishToken = Token;
+document.getElementById("SetupToken").value = "";
+document.getElementById("SetupPassword").value = "";
+document.getElementById("SetupConfirm").value = "";
+RenderPublish();
+SetPublishState("connected, you can publish now");
+})
+.catch(function () { SetPublishState("could not save the token", true); });
+}
+
+function Unlock() {
+const Field = document.getElementById("UnlockPassword");
+const Note = document.getElementById("GateError");
+const Button = document.getElementById("UnlockBtn");
+if (Field.value === "") { return; }
+
+Button.disabled = true;
+Note.textContent = "checking...";
+UnlockToken(Field.value)
+.then(function (Token) {
+PublishToken = Token;
+Field.value = "";
+Note.textContent = "";
+document.getElementById("Gate").classList.add("Hidden");
+RenderPublish();
+})
+.catch(function () { Note.textContent = "wrong password"; })
+.then(function () { Button.disabled = false; });
+}
+
+function Lock() {
+PublishToken = null;
+RenderPublish();
+document.getElementById("Gate").classList.remove("Hidden");
+}
+
+function ForgetToken() {
+if (!window.confirm("clear the saved github token? you will need to paste a new one to publish again.")) { return; }
+window.localStorage.removeItem(VaultKey);
+window.localStorage.removeItem(PublishedKey);
+PublishToken = null;
+document.getElementById("UnlockPassword").value = "";
+document.getElementById("GateError").textContent = "";
+document.getElementById("Gate").classList.add("Hidden");
+RenderPublish();
 }
 
 document.getElementById("AddJob").addEventListener("click", AddJob);
@@ -496,7 +761,7 @@ document.getElementById("ExportBtn").addEventListener("click", function () {
 const Output = document.getElementById("ExportOut");
 Output.value = BuildExport();
 Output.classList.add("Shown");
-Flash("generated, copy it into index.html");
+Flash("generated, paste it into Commissions.json");
 });
 
 document.getElementById("CopyBtn").addEventListener("click", function () {
@@ -520,10 +785,24 @@ Render();
 Flash("cleared");
 });
 
+document.getElementById("ConnectBtn").addEventListener("click", Connect);
+document.getElementById("SetupConfirm").addEventListener("keydown", function (Event) {
+if (Event.key === "Enter") { Connect(); }
+});
+document.getElementById("PublishBtn").addEventListener("click", Publish);
+document.getElementById("LockBtn").addEventListener("click", Lock);
+document.getElementById("UnlockBtn").addEventListener("click", Unlock);
+document.getElementById("UnlockPassword").addEventListener("keydown", function (Event) {
+if (Event.key === "Enter") { Unlock(); }
+});
+document.getElementById("ForgetBtn").addEventListener("click", ForgetToken);
+
 window.addEventListener("beforeunload", SaveJobs);
 
 Jobs = LoadJobs();
 Render();
+RenderPublish();
+if (CryptoReady() && ReadVault()) { document.getElementById("Gate").classList.remove("Hidden"); }
 window.setInterval(TickClocks, 1000);
 window.setInterval(SaveJobs, 30000);
 </script>

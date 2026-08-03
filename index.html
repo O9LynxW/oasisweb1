@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="oasisss - roblox developer. combat systems, skill sets, vfx and ui.">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; img-src 'self' data: blob: file: https:; media-src 'self' blob: file: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; connect-src https://api.lanyard.rest;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; img-src 'self' data: blob: file: https:; media-src 'self' blob: file: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.lanyard.rest;">
 <title>oasisss</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -671,11 +671,11 @@ Grid.appendChild(Card);
 });
 }
 
-function RenderBoard() {
+function RenderBoard(Jobs) {
 const Grid = document.getElementById("BoardGrid");
 Grid.replaceChildren();
 
-const Visible = ActiveCommissions.filter(function (Job) { return Job.Status !== "Hidden"; });
+const Visible = Jobs.filter(function (Job) { return Job.Status !== "Hidden"; });
 
 if (Visible.length === 0) {
 const Empty = document.createElement("div");
@@ -755,6 +755,46 @@ Card.appendChild(Foot);
 
 Grid.appendChild(Card);
 });
+}
+
+function KnownStatus(Value) {
+const Allowed = ["Active", "Queued", "Done", "Hidden"];
+return Allowed.indexOf(Value) === -1 ? "Queued" : Value;
+}
+
+function CleanJobs(Payload) {
+const Source = Array.isArray(Payload) ? Payload : (Payload && Array.isArray(Payload.Jobs) ? Payload.Jobs : null);
+if (!Source) { return null; }
+return Source
+.filter(function (Job) { return Job !== null && typeof Job === "object"; })
+.map(function (Job) {
+const Tasks = Array.isArray(Job.Tasks) ? Job.Tasks : [];
+return {
+Project: String(Job.Project == null ? "untitled" : Job.Project),
+Client: String(Job.Client == null ? "" : Job.Client),
+Status: KnownStatus(Job.Status),
+LoggedSeconds: Math.max(0, Math.floor(Number(Job.LoggedSeconds) || 0)),
+Tasks: Tasks
+.filter(function (Task) { return Task !== null && typeof Task === "object"; })
+.map(function (Task) {
+return { Label: String(Task.Label == null ? "" : Task.Label), Done: Boolean(Task.Done) };
+})
+};
+});
+}
+
+function LoadCommissions() {
+fetch("Commissions.json?v=" + Date.now(), { cache: "no-store" })
+.then(function (Response) {
+if (!Response.ok) { return null; }
+return Response.json();
+})
+.then(function (Payload) {
+const Jobs = CleanJobs(Payload);
+if (!Jobs) { return; }
+RenderBoard(Jobs);
+})
+.catch(function () { return; });
 }
 
 function RenderLinks() {
@@ -913,7 +953,8 @@ if (!document.hidden) { FetchPresence(); }
 
 document.getElementById("FooterYear").textContent = String(new Date().getFullYear());
 RenderWork();
-RenderBoard();
+RenderBoard(ActiveCommissions);
+LoadCommissions();
 RenderLinks();
 SetupReveal();
 SetupHeroEnter();

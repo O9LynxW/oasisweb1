@@ -1,0 +1,15 @@
+{
+"UpdatedAt": "2026-08-03T00:00:00.000Z",
+"Jobs": [
+{
+"Project": "Example Game",
+"Client": "someone",
+"Status": "Active",
+"LoggedSeconds": 0,
+"Tasks": [
+{ "Label": "example finished task", "Done": true },
+{ "Label": "example task in progress", "Done": false }
+]
+}
+]
+}
