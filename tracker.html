@@ -181,6 +181,7 @@ button{cursor:pointer;border:none;background:none}
 <div class="PublishRow Gone" id="PublishRow">
 <button class="Btn BtnPrimary" id="PublishBtn">publish to site</button>
 <button class="Btn BtnGhost" id="LockBtn">lock</button>
+<button class="Btn BtnGhost" id="ChangeBtn">change token</button>
 </div>
 
 <div class="PublishState" id="PublishState"></div>
@@ -742,6 +743,14 @@ RenderPublish();
 document.getElementById("Gate").classList.remove("Hidden");
 }
 
+function ChangeToken() {
+if (!window.confirm("replace the saved token? you will need to paste a new one and pick a password again.")) { return; }
+window.localStorage.removeItem(VaultKey);
+PublishToken = null;
+RenderPublish();
+SetPublishState("paste the new token below");
+}
+
 function ForgetToken() {
 if (!window.confirm("clear the saved github token? you will need to paste a new one to publish again.")) { return; }
 window.localStorage.removeItem(VaultKey);
@@ -792,6 +801,7 @@ if (Event.key === "Enter") { Connect(); }
 });
 document.getElementById("PublishBtn").addEventListener("click", Publish);
 document.getElementById("LockBtn").addEventListener("click", Lock);
+document.getElementById("ChangeBtn").addEventListener("click", ChangeToken);
 document.getElementById("UnlockBtn").addEventListener("click", Unlock);
 document.getElementById("UnlockPassword").addEventListener("keydown", function (Event) {
 if (Event.key === "Enter") { Unlock(); }
