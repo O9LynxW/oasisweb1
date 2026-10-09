@@ -8,6 +8,11 @@
 .WorkCaption small{font-weight:700;font-size:11px;letter-spacing:.24em;color:var(--Cyan)}
 .WorkCaption b{font-weight:800;font-style:italic;font-size:22px;text-transform:uppercase}
 
+.ArtGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;max-width:1100px}
+.ArtTile{position:relative;aspect-ratio:1;overflow:hidden;background:var(--Navy);clip-path:polygon(0 0,100% 0,95% 100%,0 100%);border-bottom:4px solid transparent;transition:transform .2s var(--Snap),border-color .15s ease}
+.ArtTile:hover,.ArtTile:focus-visible{transform:translateY(-4px);border-bottom-color:var(--Cyan);outline:none}
+.ArtTile img{width:100%;height:100%;object-fit:cover}
+
 .Viewer{position:fixed;inset:0;z-index:15;background:rgba(4,13,43,.96);display:flex;align-items:center;justify-content:center;padding:90px 5vw 40px}
 .ViewerPanel{display:grid;grid-template-columns:minmax(0,3fr) minmax(220px,1fr);gap:28px;width:min(1280px,100%);align-items:end;animation:SlideIn .35s var(--Snap) both}
 .ViewerMedia video,.ViewerMedia img{width:100%;max-height:72vh;background:#000;object-fit:contain}
@@ -119,6 +124,7 @@ a.Post:hover{background:rgba(4,13,43,.75);border-left-color:var(--White)}
 @media(max-width:760px){
 	.WorkGrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 	.WorkCaption b{font-size:17px}
+	.ArtGrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 	.Viewer{padding:76px 16px 24px}
 	.GameStat b{font-size:26px}
 	.Post{flex-direction:column;gap:4px}

@@ -19,6 +19,10 @@ UiPeakDb=-3
 UiFadeIn=0.006
 UiFadeOut=0.03
 
+ArtMaxWidth=1600
+ArtThumbWidth=600
+ArtPieces=(Art01 Art02 Art03)
+
 UiSounds=(
 	"Move|0|0.083"
 	"Tab|0|0.081"
@@ -74,6 +78,14 @@ done
 
 ffmpeg -y -v error -i "$SourceRoot/Local/BetterDays.mp3" -map 0:a -c:a libmp3lame -b:a "$TrackRate" \
 	"$AudioOut/BetterDays.mp3"
+
+mkdir -p "$SiteRoot/media/Art"
+
+for Name in "${ArtPieces[@]}"; do
+	Input="$SourceRoot/Art/$Name.png"
+	ffmpeg -y -v error -i "$Input" -vf "scale='min($ArtMaxWidth,iw)':-2" -q:v 2 "$SiteRoot/media/Art/$Name.jpg"
+	ffmpeg -y -v error -i "$Input" -vf "scale='min($ArtThumbWidth,iw)':-2" -q:v "$ImageQuality" "$SiteRoot/media/Art/$Name-Thumb.jpg"
+done
 
 mkdir -p "$AudioOut/Ui"
 

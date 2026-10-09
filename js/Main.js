@@ -1,15 +1,16 @@
-import { LoadJson, CleanGames, CleanWorks, CleanPosts, CleanStats, CleanSite } from "./Data.js"
+import { LoadJson, CleanGames, CleanWorks, CleanPosts, CleanArt, CleanStats, CleanSite } from "./Data.js"
 import { StartRouter, ScreenFromHash } from "./Router.js"
 import { StartClock, StartPresence } from "./Hud.js"
 import { CreateSounds } from "./Player.js"
 import * as Menu from "./Screens/Menu.js"
 import * as Works from "./Screens/Works.js"
 import * as Games from "./Screens/Games.js"
+import * as Art from "./Screens/Art.js"
 import * as Commissions from "./Screens/Commissions.js"
 import * as Latest from "./Screens/Latest.js"
 import * as Contact from "./Screens/Contact.js"
 
-const Screens = [Menu, Works, Games, Commissions, Latest, Contact]
+const Screens = [Menu, Works, Games, Art, Commissions, Latest, Contact]
 const IgnoredKeys = ["Shift", "Control", "Alt", "Meta", "Tab", "CapsLock"]
 
 async function LoadContext() {
@@ -19,6 +20,7 @@ async function LoadContext() {
 		LoadJson("data/Posts.json"),
 		LoadJson("data/Stats.json"),
 		LoadJson("data/Site.json"),
+		LoadJson("data/Art.json"),
 	])
 
 	return {
@@ -27,6 +29,7 @@ async function LoadContext() {
 		Posts: CleanPosts(Payloads[2]),
 		Stats: CleanStats(Payloads[3]),
 		Site: CleanSite(Payloads[4]),
+		Art: CleanArt(Payloads[5]),
 	}
 }
 

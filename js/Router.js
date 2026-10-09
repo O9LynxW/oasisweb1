@@ -2,6 +2,7 @@ const HashScreens = {
 	works: "Works",
 	work: "Works",
 	games: "Games",
+	art: "Art",
 	commissions: "Commissions",
 	current: "Commissions",
 	latest: "Latest",

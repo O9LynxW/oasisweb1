@@ -4,6 +4,7 @@ import { FormatCount } from "../Format.js"
 const MenuEntries = [
 	{ Target: "Works", Tag: "CLIPS" },
 	{ Target: "Games", Tag: "CREDITS" },
+	{ Target: "Art", Tag: "PERSONAL" },
 	{ Target: "Commissions", Tag: "RATES" },
 	{ Target: "Latest", Tag: "NEWS" },
 	{ Target: "Contact", Tag: "LINKS" },

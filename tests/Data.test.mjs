@@ -1,6 +1,6 @@
 import { test } from "node:test"
 import Assert from "node:assert/strict"
-import { CleanGames, CleanWorks, CleanPosts, CleanStats, CleanSite } from "../js/Data.js"
+import { CleanGames, CleanWorks, CleanPosts, CleanArt, CleanStats, CleanSite } from "../js/Data.js"
 
 const BadPayloads = [null, "text", {}, 42, []]
 
@@ -41,6 +41,11 @@ test("CleanPosts sorts newest first", function () {
 	Assert.deepEqual(Posts.map(function (Post) { return Post.Title }), ["New", "Old"])
 })
 
+test("CleanArt drops pieces without an image and falls back to the image as thumb", function () {
+	const Art = CleanArt({ Art: [{ Thumb: "a.jpg" }, { Image: "b.jpg" }, { Image: "c.jpg", Thumb: "c-Thumb.jpg" }] })
+	Assert.deepEqual(Art, [{ Image: "b.jpg", Thumb: "b.jpg" }, { Image: "c.jpg", Thumb: "c-Thumb.jpg" }])
+})
+
 test("CleanStats gives zero totals for nothing", function () {
 	const Stats = CleanStats(null)
 	Assert.deepEqual(Stats.Totals, { Visits: 0, Favorites: 0, Playing: 0 })
@@ -64,6 +69,7 @@ test("every cleaner survives bad payloads", function () {
 		Assert.deepEqual(CleanGames(Payload), [])
 		Assert.deepEqual(CleanWorks(Payload), [])
 		Assert.deepEqual(CleanPosts(Payload), [])
+		Assert.deepEqual(CleanArt(Payload), [])
 		Assert.equal(CleanStats(Payload).Totals.Visits, 0)
 		Assert.deepEqual(CleanSite(Payload).Links, [])
 	})

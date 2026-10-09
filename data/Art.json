@@ -1,0 +1,7 @@
+{
+	"Art": [
+		{ "Image": "media/Art/Art01.jpg", "Thumb": "media/Art/Art01-Thumb.jpg" },
+		{ "Image": "media/Art/Art02.jpg", "Thumb": "media/Art/Art02-Thumb.jpg" },
+		{ "Image": "media/Art/Art03.jpg", "Thumb": "media/Art/Art03-Thumb.jpg" }
+	]
+}

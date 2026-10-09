@@ -150,11 +150,11 @@ test.describe("works", function () {
 	test("the viewer opens a clip and escape closes it before leaving", async function ({ page }) {
 		await OpenScreen(page, "Works")
 		await page.locator(".WorkTile").first().click()
-		await expect(page.locator(".Viewer")).toBeVisible()
-		await expect(page.locator(".ViewerTitle")).toHaveText("Stylised Flashstep")
-		await expect(page.locator(".ViewerMedia video")).toHaveAttribute("src", /StylisedFlashstepSfx\.mp4$/)
+		await expect(page.locator("#ScreenWorks .Viewer")).toBeVisible()
+		await expect(page.locator("#ScreenWorks .ViewerTitle")).toHaveText("Stylised Flashstep")
+		await expect(page.locator("#ScreenWorks .ViewerMedia video")).toHaveAttribute("src", /StylisedFlashstepSfx\.mp4$/)
 		await page.keyboard.press("Escape")
-		await expect(page.locator(".Viewer")).toBeHidden()
+		await expect(page.locator("#ScreenWorks .Viewer")).toBeHidden()
 		await expect(page.locator("#ScreenWorks")).toBeVisible()
 		await page.keyboard.press("Escape")
 		await expect(page.locator("#ScreenMain")).toBeVisible()
@@ -169,6 +169,30 @@ test.describe("works", function () {
 		await page.keyboard.press("ArrowDown")
 		await page.keyboard.press("Enter")
 		await expect(page.locator("#ScreenGames")).toBeVisible()
+	})
+})
+
+test.describe("art", function () {
+	test("shows the personal pieces with the not for commission note", async function ({ page }) {
+		await OpenScreen(page, "Art")
+		await expect(page.locator("#ScreenArt .Quote")).toContainText("i don't take art commissions")
+		await expect(page.locator(".ArtTile")).toHaveCount(3)
+		await page.locator(".ArtTile").first().click()
+		await expect(page.locator("#ScreenArt .Viewer")).toBeVisible()
+		await expect(page.locator("#ScreenArt .ViewerMedia img")).toHaveAttribute("src", "media/Art/Art01.jpg")
+		await expect(page.locator("#ScreenArt .ViewerNote")).toHaveText("not for commission.")
+		await page.keyboard.press("Escape")
+		await expect(page.locator("#ScreenArt .Viewer")).toBeHidden()
+		await page.keyboard.press("Escape")
+		await expect(page.locator("#ScreenMain")).toBeVisible()
+	})
+
+	test("the menu lists art between games and commissions", async function ({ page }) {
+		await EnterMenu(page)
+		await expect(page.locator(".MenuItem")).toHaveCount(6)
+		await page.locator(".MenuItem", { hasText: "Art" }).click()
+		await expect(page.locator("#ScreenArt")).toBeVisible()
+		await expect(page).toHaveURL(/#art$/)
 	})
 })
 

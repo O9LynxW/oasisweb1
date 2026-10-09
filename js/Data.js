@@ -92,6 +92,15 @@ function CleanGameStats(Value) {
 	return { Visits: Count(Source.Visits), Favorites: Count(Source.Favorites), Playing: Count(Source.Playing) }
 }
 
+export function CleanArt(Payload) {
+	return ListFrom(Payload, "Art")
+		.filter(function (Piece) { return OptionalText(Piece.Image) !== null })
+		.map(function (Piece) {
+			const Thumb = OptionalText(Piece.Thumb)
+			return { Image: Text(Piece.Image), Thumb: Thumb !== null ? Thumb : Text(Piece.Image) }
+		})
+}
+
 export function CleanStats(Payload) {
 	const Source = IsObject(Payload) ? Payload : {}
 	const Games = {}

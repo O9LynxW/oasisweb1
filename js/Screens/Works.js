@@ -1,4 +1,6 @@
 import { Create, BuildPage, BuildEmpty, BuildTabs, Wrap } from "../Dom.js"
+import { CreateViewer } from "../Viewer.js"
+import { CreateGridFocus } from "../GridFocus.js"
 
 const TabCategories = [null, "VFX", "SFX", "UI", "Scripting"]
 const TabLabels = ["ALL", "VFX", "SFX", "UI", "SCRIPTING"]
@@ -7,9 +9,10 @@ let Context = null
 let Grid = null
 let Tabs = null
 let Viewer = null
+let Focus = null
+let KeyHandlers = {}
 let ActiveTab = 0
 let Tiles = []
-let FocusIndex = 0
 
 function StopPreviews() {
 	Tiles.forEach(function (Tile) {
@@ -23,6 +26,19 @@ function StartPreview(Tile) {
 	if (!Preview) return
 	if (Preview.preload !== "auto") Preview.preload = "auto"
 	Preview.play().catch(function () { return })
+}
+
+function OpenWork(Work) {
+	StopPreviews()
+	Viewer.Open({
+		Video: Work.Video,
+		Poster: Work.Poster,
+		Image: Work.Poster,
+		Title: Work.Title,
+		Meta: [Work.Category.toUpperCase(), Work.Game.toUpperCase()].filter(Boolean).join(" / "),
+		Heading: Work.Title,
+		Note: Work.Note,
+	})
 }
 
 function BuildTile(Work) {
@@ -52,11 +68,7 @@ function BuildTile(Work) {
 	Caption.appendChild(Create("small", null, Work.Category.toUpperCase()))
 	Caption.appendChild(Create("b", null, Work.Title))
 	Tile.appendChild(Caption)
-
-	Tile.addEventListener("focus", function () {
-		FocusIndex = Tiles.indexOf(Tile)
-	})
-	Tile.addEventListener("click", function () { OpenViewer(Work) })
+	Tile.addEventListener("click", function () { OpenWork(Work) })
 	return Tile
 }
 
@@ -68,7 +80,7 @@ function RenderGrid() {
 	})
 
 	Tiles = Visible.map(BuildTile)
-	FocusIndex = 0
+	Focus.SetTiles(Tiles)
 	Grid.replaceChildren(...Tiles)
 	if (Tiles.length === 0) Grid.appendChild(BuildEmpty("nothing here yet"))
 }
@@ -84,82 +96,7 @@ function ChooseTab(Index) {
 	Context.Sounds.Tab()
 }
 
-function BuildViewer() {
-	const Overlay = Create("div", "Viewer")
-	Overlay.hidden = true
-	Overlay.setAttribute("role", "dialog")
-	Overlay.setAttribute("aria-modal", "true")
-
-	const Panel = Create("div", "ViewerPanel")
-	const Media = Create("div", "ViewerMedia")
-	const Info = Create("div", "ViewerInfo")
-	const Close = Create("button", "ViewerClose", "CLOSE")
-	Close.addEventListener("click", CloseViewer)
-	Overlay.addEventListener("click", function (ClickEvent) {
-		if (ClickEvent.target === Overlay) CloseViewer()
-	})
-
-	Panel.appendChild(Media)
-	Panel.appendChild(Info)
-	Overlay.appendChild(Panel)
-	return { Overlay: Overlay, Media: Media, Info: Info, Close: Close }
-}
-
-function OpenViewer(Work) {
-	StopPreviews()
-	Context.Sounds.Select()
-
-	const Media = Work.Video ? Create("video") : Create("img")
-	if (Work.Video) {
-		Media.src = Work.Video
-		Media.controls = true
-		Media.autoplay = true
-		Media.playsInline = true
-		if (Work.Poster) Media.poster = Work.Poster
-		Context.Sounds.Duck()
-	} else {
-		Media.src = Work.Poster
-		Media.alt = Work.Title
-	}
-
-	const Meta = [Work.Category.toUpperCase(), Work.Game.toUpperCase()].filter(Boolean).join(" / ")
-	Viewer.Media.replaceChildren(Media)
-	const Details = [Create("small", "ViewerMeta", Meta), Create("h3", "ViewerTitle", Work.Title)]
-	if (Work.Note) Details.push(Create("p", "ViewerNote", Work.Note))
-	Details.push(Viewer.Close)
-	Viewer.Info.replaceChildren(...Details)
-	Viewer.Overlay.hidden = false
-	Viewer.Close.focus({ preventScroll: true })
-}
-
-function CloseViewer() {
-	if (Viewer.Overlay.hidden) return false
-	Viewer.Media.replaceChildren()
-	Viewer.Overlay.hidden = true
-	Context.Sounds.Unduck()
-	Context.Sounds.Back()
-	if (Tiles[FocusIndex]) Tiles[FocusIndex].focus({ preventScroll: true })
-	return true
-}
-
-function ColumnCount() {
-	const Template = window.getComputedStyle(Grid).gridTemplateColumns
-	return Math.max(1, Template.split(" ").filter(Boolean).length)
-}
-
-function MoveFocus(Step) {
-	if (Tiles.length === 0) return
-	FocusIndex = Math.min(Tiles.length - 1, Math.max(0, FocusIndex + Step))
-	Tiles[FocusIndex].focus()
-	Tiles[FocusIndex].scrollIntoView({ block: "nearest" })
-	Context.Sounds.Move()
-}
-
-const KeyHandlers = {
-	ArrowLeft: function () { MoveFocus(-1) },
-	ArrowRight: function () { MoveFocus(1) },
-	ArrowUp: function () { MoveFocus(-ColumnCount()) },
-	ArrowDown: function () { MoveFocus(ColumnCount()) },
+const TabKeys = {
 	q: function () { ChooseTab(ActiveTab - 1) },
 	e: function () { ChooseTab(ActiveTab + 1) },
 }
@@ -171,7 +108,9 @@ export function Mount(Root, SharedContext) {
 	const Body = BuildPage(Root, "Works", "CLIPS AND BREAKDOWNS")
 	Tabs = BuildTabs(TabLabels, ChooseTab)
 	Grid = Create("div", "WorkGrid")
-	Viewer = BuildViewer()
+	Focus = CreateGridFocus(Grid, Context.Sounds)
+	Viewer = CreateViewer(Context.Sounds, function () { Focus.Restore() })
+	KeyHandlers = Object.assign({}, Focus.KeyHandlers, TabKeys)
 
 	Body.appendChild(Tabs.Row)
 	Body.appendChild(Grid)
@@ -181,12 +120,12 @@ export function Mount(Root, SharedContext) {
 
 export function OnHide() {
 	StopPreviews()
-	CloseViewer()
+	Viewer.Close()
 }
 
 export function OnKey(Key) {
-	if (Key === "Escape" || Key === "Backspace") return CloseViewer()
-	if (!Viewer.Overlay.hidden) return false
+	if (Key === "Escape" || Key === "Backspace") return Viewer.Close()
+	if (Viewer.IsOpen()) return false
 
 	const Handler = KeyHandlers[Key]
 	if (!Handler) return false
