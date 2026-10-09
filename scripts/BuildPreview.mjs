@@ -38,7 +38,7 @@ body{width:${Width}px;height:${Height}px;overflow:hidden;font-family:"Saira Cond
 <div class="Bar"></div>
 <div class="Underline"></div>
 <div class="Name">OASIS</div>
-<div class="Stat"><b>${VisitsLabel}</b><small>VISITS ACROSS MY GAMES</small></div>
+<div class="Stat"><b>${VisitsLabel}</b><small>VISITS ACROSS GAMES WORKED ON</small></div>
 </body>
 </html>`
 

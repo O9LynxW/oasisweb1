@@ -42,7 +42,10 @@ img,video{display:block;max-width:100%}
 .Hud{position:fixed;top:22px;left:28px;z-index:5;font-family:var(--Display);line-height:1;pointer-events:none}
 .HudDate{font-weight:800;font-style:italic;font-size:40px}
 .HudDate span{font-size:22px;color:var(--Cyan);margin-left:6px}
-.HudVisits{font-weight:700;font-size:12px;letter-spacing:.24em;color:var(--Cyan);margin-top:6px}
+.HudVisits{display:inline-flex;align-items:center;gap:10px;margin-top:12px;padding:5px 22px 5px 12px;background:rgba(4,13,43,.65);border-left:4px solid var(--Cyan);clip-path:polygon(0 0,100% 0,90% 100%,0 100%)}
+body[data-screen]:not([data-screen="Main"]) .HudVisits{display:none}
+.HudVisits b{font-weight:900;font-style:italic;font-size:30px;line-height:1;text-shadow:3px 3px 0 var(--Deep)}
+.HudVisits small{font-weight:700;font-size:11px;letter-spacing:.24em;color:var(--Cyan)}
 .HudTime{font-weight:700;font-style:italic;font-size:17px;letter-spacing:.2em;color:var(--Ice);margin-top:2px}
 
 .Presence{position:fixed;top:22px;right:28px;z-index:6;display:flex;align-items:center;gap:10px;font-family:var(--Display);line-height:1.1}
@@ -100,6 +103,9 @@ img,video{display:block;max-width:100%}
 	.HudDate{font-size:28px}
 	.HudDate span{font-size:16px}
 	.HudTime{font-size:13px}
+	.HudVisits{margin-top:8px;padding:3px 16px 3px 10px;gap:8px}
+	.HudVisits b{font-size:22px}
+	.HudVisits small{font-size:9px}
 	.Presence{top:16px;right:18px}
 	.PresenceAvatar{width:30px;height:30px}
 	.PresenceName{font-size:15px}

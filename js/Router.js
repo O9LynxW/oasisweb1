@@ -42,6 +42,7 @@ export function StartRouter(Screens, Elements, Sounds) {
 			Section.classList.toggle("Shown", Section.dataset.screen === Name)
 		})
 		Elements.BackButton.hidden = Name === "Main"
+		document.body.dataset.screen = Name
 		Current = Name
 
 		const Next = ScreensByName.get(Name)

@@ -128,10 +128,22 @@ test.describe("visits", function () {
 			if (Request_.url().endsWith("/Visit")) Methods.push(Request_.method())
 		})
 		await page.goto("/")
-		await expect(page.locator("#HudVisits")).toHaveText("SITE VISITS 221")
+		await expect(page.locator("#HudVisits b")).toHaveText("221")
+		await expect(page.locator("#HudVisits small")).toHaveText("SITE VISITS")
 		await page.reload()
-		await expect(page.locator("#HudVisits")).toHaveText("SITE VISITS 221")
+		await expect(page.locator("#HudVisits b")).toHaveText("221")
+		await expect(page.locator("#HudVisits small")).toHaveText("SITE VISITS")
 		expect(Methods).toEqual(["POST", "GET"])
+	})
+
+	test("the badge shows on the main menu only so it never covers a page title", async function ({ page }) {
+		await EnterMenu(page)
+		await expect(page.locator("#HudVisits")).toBeVisible()
+		await page.keyboard.press("Enter")
+		await expect(page.locator("#ScreenWorks")).toBeVisible()
+		await expect(page.locator("#HudVisits")).toBeHidden()
+		await page.keyboard.press("Escape")
+		await expect(page.locator("#HudVisits")).toBeVisible()
 	})
 
 	test("a failing counter just hides the line", async function ({ page }) {
@@ -167,7 +179,7 @@ test.describe("player", function () {
 
 	test("link previews point at the preview card", async function ({ page }) {
 		await page.goto("/")
-		await expect(page.locator("meta[property='og:image']")).toHaveAttribute("content", "https://oasislua.site/media/Preview.jpg")
+		await expect(page.locator("meta[property='og:image']")).toHaveAttribute("content", "https://oasislua.site/media/Preview.jpg?v=2")
 		await expect(page.locator("meta[name='twitter:card']")).toHaveAttribute("content", "summary_large_image")
 		const Preview = await page.request.get("/media/Preview.jpg")
 		expect(Preview.ok()).toBe(true)

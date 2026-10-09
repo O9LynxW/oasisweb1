@@ -91,7 +91,11 @@ export async function StartVisitCounter(Url, Element) {
 		const Result = await Reply.json()
 		if (!Result || !Number.isFinite(Result.Count)) return
 		if (ShouldCount) MarkCounted()
-		Element.textContent = "SITE VISITS " + FormatCount(Result.Count)
+		const Count = document.createElement("b")
+		Count.textContent = FormatCount(Result.Count)
+		const Label = document.createElement("small")
+		Label.textContent = "SITE VISITS"
+		Element.replaceChildren(Count, Label)
 		Element.hidden = false
 	} catch {
 		return
