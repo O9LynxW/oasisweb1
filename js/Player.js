@@ -37,7 +37,7 @@ function FetchSamples() {
 	const Names = Object.keys(UiSounds)
 	return Promise.all(Names.map(function (Name) {
 		return fetch(UiFolder + Name + ".mp3")
-			.then(function (Response) { return Response.ok ? Response.arrayBuffer() : null })
+			.then(function (Reply) { return Reply.ok ? Reply.arrayBuffer() : null })
 			.catch(function () { return null })
 	})).then(function (Buffers) {
 		const ByName = {}

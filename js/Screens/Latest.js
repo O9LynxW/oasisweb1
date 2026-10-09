@@ -4,10 +4,10 @@ import { FormatDate } from "../Format.js"
 function BuildPost(Post) {
 	const Card = Post.Link ? OpenExternal(Create("a", "Post"), Post.Link) : Create("article", "Post")
 	Card.appendChild(Create("time", "PostDate", FormatDate(Post.Date)))
-	const Text = Create("div", "PostText")
-	Text.appendChild(Create("h3", null, Post.Title))
-	Text.appendChild(Create("p", null, Post.Text))
-	Card.appendChild(Text)
+	const Copy = Create("div", "PostText")
+	Copy.appendChild(Create("h3", null, Post.Title))
+	Copy.appendChild(Create("p", null, Post.Text))
+	Card.appendChild(Copy)
 	return Card
 }
 

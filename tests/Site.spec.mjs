@@ -116,8 +116,8 @@ test.describe("player", function () {
 
 	test("all six menu sounds load", async function ({ page }) {
 		const Loaded = []
-		page.on("response", function (Response) {
-			if (Response.url().includes("/media/Audio/Ui/") && Response.ok()) Loaded.push(Response.url())
+		page.on("response", function (Reply) {
+			if (Reply.url().includes("/media/Audio/Ui/") && Reply.ok()) Loaded.push(Reply.url())
 		})
 		await EnterMenu(page)
 		await expect.poll(function () { return Loaded.length }).toBe(6)
@@ -204,13 +204,85 @@ test.describe("games", function () {
 test.describe("commissions", function () {
 	test("rates and payment render with no board", async function ({ page }) {
 		await OpenScreen(page, "Commissions")
-		await expect(page.locator("#ScreenCommissions .Tab")).toHaveText(["RATES", "PAYMENT"])
-		await expect(page.locator(".Tier")).toHaveCount(6)
-		await expect(page.locator(".TierPrice")).toHaveText(["$22", "$45", "$110", "$150", "$190", "$10"])
+		await expect(page.locator("#ScreenCommissions .Tab")).toHaveText(["RATES", "PAYMENT", "REQUEST"])
+		await expect(page.locator(".Tier")).toHaveCount(9)
+		await expect(page.locator(".TierPrice")).toHaveText(["$22", "$45", "$110", "$150", "$190", "$10", "$5", "$15", "$20"])
 		await page.keyboard.press("ArrowRight")
 		await expect(page.locator(".Currency")).toHaveCount(3)
 		await expect(page.locator(".PayPal")).toHaveAttribute("href", "https://paypal.me/oasis098")
 		await expect(page.locator(".Terms li")).toHaveCount(7)
+	})
+})
+
+test.describe("request form", function () {
+	const WorkerUrl = "https://kaosbot.mosham.workers.dev/Commission"
+
+	async function OpenRequest(Page) {
+		await OpenScreen(Page, "Commissions")
+		await Page.locator(".Tab", { hasText: "REQUEST" }).click()
+		await expect(Page.locator(".RequestForm")).toBeVisible()
+	}
+
+	async function FillBasics(Page) {
+		await Page.locator("input[name='Discord']").fill("oasis")
+		await Page.locator(".KindOption", { hasText: "SFX" }).click()
+		await Page.locator(".KindOption", { hasText: "VFX" }).click()
+		await Page.locator("textarea[name='Details']").fill("a cleave skill with full sound design")
+	}
+
+	test("sends every field and the files to mosham, then clears", async function ({ page }) {
+		let Posted = null
+		await page.route(WorkerUrl, async function (Route) {
+			Posted = Route.request().postData()
+			await Route.fulfill({ json: { Accepted: true } })
+		})
+		await OpenRequest(page)
+		await FillBasics(page)
+		await page.locator("input[name='Budget']").fill("$40")
+		await page.locator("input[name='Files']").setInputFiles({ name: "ref.png", mimeType: "image/png", buffer: Buffer.alloc(64) })
+		await expect(page.locator(".FileList li")).toHaveText(["ref.png (1 KB)"])
+		await page.locator(".FormSend").click()
+		await expect(page.locator(".FormStatus")).toHaveText("sent! i'll message you on discord soon.")
+		expect(Posted).toContain("name=\"Discord\"\r\n\r\noasis")
+		expect(Posted).toContain("name=\"Kinds\"\r\n\r\nVFX")
+		expect(Posted).toContain("name=\"Kinds\"\r\n\r\nSFX")
+		expect(Posted).toContain("filename=\"ref.png\"")
+		await expect(page.locator("input[name='Discord']")).toHaveValue("")
+	})
+
+	test("shows the reason mosham gives when it refuses", async function ({ page }) {
+		await page.route(WorkerUrl, function (Route) {
+			Route.fulfill({ status: 400, json: { Accepted: false, Reason: "Tell me a bit more about what you need" } })
+		})
+		await OpenRequest(page)
+		await FillBasics(page)
+		await page.locator(".FormSend").click()
+		await expect(page.locator(".FormStatus")).toHaveText("Tell me a bit more about what you need")
+	})
+
+	test("blocks too many attachments before sending", async function ({ page }) {
+		let Calls = 0
+		await page.route(WorkerUrl, function (Route) {
+			Calls += 1
+			Route.fulfill({ json: { Accepted: true } })
+		})
+		await OpenRequest(page)
+		await FillBasics(page)
+		const Files = [1, 2, 3, 4, 5].map(function (I) {
+			return { name: "ref" + I + ".png", mimeType: "image/png", buffer: Buffer.alloc(8) }
+		})
+		await page.locator("input[name='Files']").setInputFiles(Files)
+		await page.locator(".FormSend").click()
+		await expect(page.locator(".FormStatus")).toHaveText("attach 4 files or fewer.")
+		expect(Calls).toBe(0)
+	})
+
+	test("typed input survives switching tabs", async function ({ page }) {
+		await OpenRequest(page)
+		await page.locator("input[name='Discord']").fill("oasis")
+		await page.locator(".Tab", { hasText: "RATES" }).click()
+		await page.locator(".Tab", { hasText: "REQUEST" }).click()
+		await expect(page.locator("input[name='Discord']")).toHaveValue("oasis")
 	})
 })
 

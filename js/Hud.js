@@ -44,9 +44,9 @@ function ApplyPresence(Data, Elements) {
 
 async function FetchPresence(UserId, Elements) {
 	try {
-		const Response = await fetch(LanyardUrl + UserId, { cache: "no-store" })
-		if (!Response.ok) return
-		const Payload = await Response.json()
+		const Reply = await fetch(LanyardUrl + UserId, { cache: "no-store" })
+		if (!Reply.ok) return
+		const Payload = await Reply.json()
 		if (Payload && Payload.success === true && Payload.data) ApplyPresence(Payload.data, Elements)
 	} catch {
 		return

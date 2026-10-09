@@ -1,6 +1,7 @@
 import { Create, BuildPage, BuildTabs, OpenExternal, Wrap } from "../Dom.js"
+import { BuildRequestForm } from "./RequestForm.js"
 
-const TabLabels = ["RATES", "PAYMENT"]
+const TabLabels = ["RATES", "PAYMENT", "REQUEST"]
 const QuoteText = "price depends on scope, i'll explain any change before starting it."
 const PayPalUrl = "https://paypal.me/oasis098"
 
@@ -22,6 +23,15 @@ const RateGroups = [
 		Detail: "scales with difficulty. no cutscenes",
 		Tiers: [
 			{ Name: "One Move", Price: "$10", Scope: "PER MOVE", Note: "or R$5,000 per move." },
+		],
+	},
+	{
+		Title: "SFX",
+		Detail: "send a good quality clip of what it's for. 2 free revisions, $5 each after",
+		Tiers: [
+			{ Name: "Simple", Price: "$5", Scope: "PER SOUND", Note: "ui, menus, pickups and simple one-shots." },
+			{ Name: "Abilities", Price: "$15", Scope: "PER SOUND", Note: "skills and combat hits, layered and designed from scratch." },
+			{ Name: "Cutscenes", Price: "$20", Scope: "PER SOUND", Note: "cutscenes, trailers, anything that needs to carry a scene." },
 		],
 	},
 ]
@@ -46,6 +56,7 @@ let Context = null
 let Tabs = null
 let Content = null
 let ActiveTab = 0
+let RequestNodes = null
 
 function BuildTier(Tier) {
 	const Card = Create("div", "Tier")
@@ -106,7 +117,12 @@ function BuildPayment() {
 	return [Row, PayPal, List]
 }
 
-const TabBuilders = [BuildRates, BuildPayment]
+function BuildRequest() {
+	if (RequestNodes === null) RequestNodes = BuildRequestForm(Context)
+	return RequestNodes
+}
+
+const TabBuilders = [BuildRates, BuildPayment, BuildRequest]
 
 function PickTab(Index) {
 	ActiveTab = Wrap(Index, TabLabels.length)

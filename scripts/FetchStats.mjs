@@ -10,9 +10,9 @@ const SiteRoot = Path.resolve(Path.dirname(fileURLToPath(import.meta.url)), ".."
 
 async function ReadJson(FetchImpl, Url) {
 	try {
-		const Response = await FetchImpl(Url)
-		if (!Response.ok) return null
-		return await Response.json()
+		const Reply = await FetchImpl(Url)
+		if (!Reply.ok) return null
+		return await Reply.json()
 	} catch {
 		return null
 	}

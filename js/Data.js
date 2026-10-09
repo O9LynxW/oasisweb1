@@ -31,9 +31,9 @@ function IsWebUrl(Value) {
 
 export async function LoadJson(Path) {
 	try {
-		const Response = await fetch(Path, { cache: "no-store" })
-		if (!Response.ok) return null
-		return await Response.json()
+		const Reply = await fetch(Path, { cache: "no-store" })
+		if (!Reply.ok) return null
+		return await Reply.json()
 	} catch {
 		return null
 	}
@@ -114,6 +114,7 @@ export function CleanSite(Payload) {
 
 	return {
 		DiscordUserId: /^[0-9]{5,25}$/.test(Text(Source.DiscordUserId)) ? Text(Source.DiscordUserId) : null,
+		CommissionUrl: IsWebUrl(Source.CommissionUrl) ? Text(Source.CommissionUrl) : null,
 		Links: ListFrom(Source.Links, "Links")
 			.filter(function (Link) { return IsWebUrl(Link.Url) })
 			.map(function (Link) {
