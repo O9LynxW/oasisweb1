@@ -47,10 +47,10 @@ img,video{display:block;max-width:100%}
 .PresenceText{display:flex;flex-direction:column;align-items:flex-end}
 .PresenceName{font-weight:800;font-style:italic;font-size:18px;letter-spacing:.04em}
 .PresenceStatus{display:flex;align-items:center;gap:7px;font-weight:700;font-size:12px;letter-spacing:.2em;color:var(--Ice)}
-.PresenceDot{width:8px;height:8px;background:var(--Green);transform:rotate(45deg);box-shadow:0 0 10px var(--Green)}
-.PresenceDot.Idle{background:var(--Amber);box-shadow:0 0 10px var(--Amber)}
-.PresenceDot.Dnd{background:var(--Red);box-shadow:0 0 10px var(--Red)}
-.PresenceDot.Offline{background:#7d8aa6;box-shadow:none}
+.PresenceDot{width:8px;height:8px;background:var(--Green);transform:rotate(45deg)}
+.PresenceDot.Idle{background:var(--Amber)}
+.PresenceDot.Dnd{background:var(--Red)}
+.PresenceDot.Offline{background:#7d8aa6}
 .Presence:hover .PresenceName{color:var(--Cyan)}
 
 .Title{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer}

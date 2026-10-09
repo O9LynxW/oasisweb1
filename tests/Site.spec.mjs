@@ -38,7 +38,7 @@ async function OpenScreen(Page, Name) {
 test.describe("shell", function () {
 	test("title screen leads to the main menu with live totals", async function ({ page }) {
 		await EnterMenu(page)
-		await expect(page.locator(".MainName h1")).toHaveText("OASIS")
+		await expect(page.locator(".MainTitle")).toHaveText("OASIS")
 		await expect(page.locator(".MainStat").first()).toContainText("833.9M")
 		await expect(page.locator(".MainStat").nth(2)).toContainText("8")
 		await expect(page.locator("#PresenceLabel")).toHaveText("IDLE")

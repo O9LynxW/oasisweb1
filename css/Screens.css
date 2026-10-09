@@ -21,7 +21,7 @@
 
 .Games{display:grid;grid-template-columns:minmax(220px,320px) minmax(0,1fr);gap:4vw;max-width:1280px}
 .GameList{display:flex;flex-direction:column;gap:4px}
-.GameItem{position:relative;font-family:var(--Display);font-weight:800;font-style:italic;font-size:28px;text-transform:uppercase;padding:2px 18px;color:rgba(207,228,255,.6);isolation:isolate;transition:color .15s ease,transform .2s var(--Snap)}
+.GameItem{position:relative;font-family:var(--Display);font-weight:800;font-style:italic;font-size:28px;text-transform:uppercase;padding:2px 18px;color:rgba(207,228,255,.72);isolation:isolate;transition:color .15s ease,transform .2s var(--Snap)}
 .GameItem.Active{color:var(--Deep);transform:translateX(12px)}
 .GameItem.Active::before{content:"";position:absolute;inset:0;background:var(--White);clip-path:var(--Slant);z-index:-1}
 .GamePanel{max-width:560px}

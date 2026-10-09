@@ -34,9 +34,12 @@ function ApplyPresence(Data, Elements) {
 
 	if (!User.avatar || !User.id) return
 	const Extension = String(User.avatar).startsWith("a_") ? ".gif" : ".png"
-	Elements.Avatar.src = "https://cdn.discordapp.com/avatars/" + encodeURIComponent(User.id) + "/" +
+	const Avatar = Elements.Root.querySelector(".PresenceAvatar") || document.createElement("img")
+	Avatar.className = "PresenceAvatar"
+	Avatar.alt = ""
+	Avatar.src = "https://cdn.discordapp.com/avatars/" + encodeURIComponent(User.id) + "/" +
 		encodeURIComponent(User.avatar) + Extension + "?size=128"
-	Elements.Avatar.hidden = false
+	if (!Avatar.parentNode) Elements.Root.prepend(Avatar)
 }
 
 async function FetchPresence(UserId, Elements) {

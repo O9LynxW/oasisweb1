@@ -35,7 +35,7 @@ function BuildStat(Value, Label) {
 
 function BuildName(Stats, GameCount) {
 	const Block = Create("div", "MainName")
-	Block.appendChild(Create("h1", null, "OASIS"))
+	Block.appendChild(Create("p", "MainTitle", "OASIS"))
 	Block.appendChild(Create("div", "MainRole", "SCRIPTER / VFX / UI / SFX"))
 
 	const Row = Create("div", "MainStats")

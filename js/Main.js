@@ -89,7 +89,7 @@ async function Boot() {
 		Name: document.getElementById("PresenceName"),
 		Label: document.getElementById("PresenceLabel"),
 		Dot: document.getElementById("PresenceDot"),
-		Avatar: document.getElementById("PresenceAvatar"),
+		Root: document.getElementById("Presence"),
 	})
 
 	const HandleTitleKey = StartTitle(Router, Sounds)
