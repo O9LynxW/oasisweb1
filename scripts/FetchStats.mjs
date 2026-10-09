@@ -5,7 +5,7 @@ import { CleanGames, CleanStats } from "../js/Data.js"
 
 const UniverseUrl = "https://apis.roblox.com/universes/v1/places/{PlaceId}/universe"
 const GamesUrl = "https://games.roblox.com/v1/games?universeIds="
-const LiveStatsUrl = "https://o9lynxw.github.io/oasisweb/data/Stats.json"
+const LiveStatsUrl = "https://oasislua.site/data/Stats.json"
 const SiteRoot = Path.resolve(Path.dirname(fileURLToPath(import.meta.url)), "..")
 
 async function ReadJson(FetchImpl, Url) {
