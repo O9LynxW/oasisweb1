@@ -1,6 +1,6 @@
-import { LoadJson, CleanGames, CleanWorks, CleanPosts, CleanArt, CleanStats, CleanSite } from "./Data.js"
+import { LoadJson, CleanGames, CleanWorks, CleanPosts, CleanArt, CleanRates, CleanStats, CleanSite } from "./Data.js"
 import { StartRouter, ScreenFromHash } from "./Router.js"
-import { StartClock, StartPresence } from "./Hud.js"
+import { StartClock, StartPresence, StartVisitCounter } from "./Hud.js"
 import { CreateSounds } from "./Player.js"
 import * as Menu from "./Screens/Menu.js"
 import * as Works from "./Screens/Works.js"
@@ -21,6 +21,7 @@ async function LoadContext() {
 		LoadJson("data/Stats.json"),
 		LoadJson("data/Site.json"),
 		LoadJson("data/Art.json"),
+		LoadJson("data/Rates.json"),
 	])
 
 	return {
@@ -30,6 +31,7 @@ async function LoadContext() {
 		Stats: CleanStats(Payloads[3]),
 		Site: CleanSite(Payloads[4]),
 		Art: CleanArt(Payloads[5]),
+		Rates: CleanRates(Payloads[6]),
 	}
 }
 
@@ -87,6 +89,7 @@ async function Boot() {
 	})
 
 	StartClock(document.getElementById("HudDate"), document.getElementById("HudTime"))
+	StartVisitCounter(Context.Site.VisitsUrl, document.getElementById("HudVisits"))
 	StartPresence(Context.Site.DiscordUserId, {
 		Name: document.getElementById("PresenceName"),
 		Label: document.getElementById("PresenceLabel"),

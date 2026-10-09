@@ -72,7 +72,37 @@
 .Terms{list-style:none;counter-reset:Term;display:flex;flex-direction:column;gap:10px;max-width:760px}
 .Terms li{counter-increment:Term;display:flex;gap:18px;align-items:baseline;color:var(--Ice);line-height:1.5;background:rgba(4,13,43,.45);padding:10px 18px}
 .Terms li::before{content:counter(Term,decimal-leading-zero);font-family:var(--Display);font-weight:900;font-style:italic;font-size:24px;color:var(--Cyan);flex-shrink:0}
-.RequestForm{display:flex;flex-direction:column;gap:18px;max-width:760px;position:relative}
+.RequestForm{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px;align-items:start;max-width:1100px;position:relative}
+.RequestMain{display:flex;flex-direction:column;gap:18px;min-width:0}
+.Picker{display:flex;flex-direction:column;gap:10px}
+.PickChips{display:flex;flex-wrap:wrap;gap:8px}
+.PickChip{font-family:var(--Display);font-weight:800;font-style:italic;font-size:18px;padding:6px 18px;background:rgba(255,255,255,.08);color:var(--Ice);transform:skewX(-14deg);transition:background .15s ease,color .15s ease}
+.PickChip:hover{background:rgba(255,255,255,.18)}
+.PickChip.Open{background:var(--Cyan);color:var(--Deep)}
+.PickList{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.PickRow{display:flex;justify-content:space-between;align-items:center;gap:14px;background:rgba(4,13,43,.55);border-left:4px solid rgba(207,228,255,.25);padding:8px 14px;transition:border-color .15s ease}
+.PickRow.Picked{border-left-color:var(--Cyan)}
+.PickInfo{display:flex;flex-direction:column;min-width:0}
+.PickInfo b{font-family:var(--Display);font-weight:800;font-style:italic;font-size:20px;text-transform:uppercase;line-height:1.1}
+.PickInfo small{color:var(--Ice);font-size:12px;letter-spacing:.06em}
+.Stepper{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.StepButton{width:36px;height:36px;font-family:var(--Display);font-weight:900;font-size:22px;line-height:1;text-align:center;background:var(--White);color:var(--Deep);clip-path:polygon(14% 0,100% 0,86% 100%,0 100%)}
+.StepButton:hover{background:var(--Cyan)}
+.StepCount{min-width:28px;text-align:center;font-family:var(--Display);font-weight:900;font-style:italic;font-size:24px}
+.Estimate{position:sticky;top:0;display:flex;flex-direction:column;gap:12px;background:rgba(4,13,43,.7);border-left:6px solid var(--Cyan);padding:16px 18px}
+.EstimateLines{list-style:none;display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--Ice)}
+.EstimateLines li{display:flex;justify-content:space-between;gap:10px}
+.EstimateEmpty{opacity:.7}
+.EstimateTotal{font-family:var(--Display);font-weight:900;font-style:italic;font-size:40px;line-height:1;text-shadow:3px 3px 0 var(--Deep)}
+.EstimateNote{color:var(--Ice);font-size:12px;line-height:1.5}
+.DropZone{position:relative;border:2px dashed rgba(207,228,255,.35);background:rgba(4,13,43,.45);padding:22px;text-align:center;transition:border-color .15s ease,background .15s ease}
+.DropZone:hover,.DropZone.Over{border-color:var(--Cyan);background:rgba(4,13,43,.7)}
+.DropInput{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.DropPrompt{font-family:var(--Display);font-weight:800;font-style:italic;font-size:18px;letter-spacing:.06em;color:var(--Ice);pointer-events:none}
+.FileChips{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.FileChip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);padding:4px 6px 4px 12px;font-size:13px;color:var(--Ice)}
+.FileRemove{width:24px;height:24px;font-weight:800;background:rgba(255,255,255,.15);color:var(--White)}
+.FileRemove:hover{background:var(--Red)}
 .FormField{display:flex;flex-direction:column;gap:6px}
 .FormLabel{font-family:var(--Display);font-weight:800;font-style:italic;font-size:16px;letter-spacing:.14em;color:var(--White)}
 .FormLabel small{font-style:normal;font-weight:700;font-size:11px;letter-spacing:.2em;color:var(--Cyan);margin-left:10px}
@@ -80,17 +110,12 @@
 .FormInput:focus{background:rgba(4,13,43,.85);box-shadow:inset 0 -2px 0 var(--Cyan)}
 .FormInput::placeholder{color:rgba(207,228,255,.5)}
 .FormDetails{min-height:140px;resize:vertical}
-.FormKinds{border:none;display:flex;flex-wrap:wrap;gap:8px}
-.FormKinds legend{margin-bottom:8px}
 .KindOption{position:relative;cursor:pointer}
 .KindOption input{position:absolute;opacity:0;width:1px;height:1px}
 .KindOption span{display:inline-block;font-family:var(--Display);font-weight:800;font-style:italic;font-size:18px;padding:6px 18px;background:rgba(255,255,255,.08);color:var(--Ice);transform:skewX(-14deg);transition:background .15s ease,color .15s ease}
 .KindOption:hover span{background:rgba(255,255,255,.18)}
 .KindOption input:checked + span{background:var(--White);color:var(--Deep)}
 .KindOption input:focus-visible + span{outline:3px solid var(--Cyan);outline-offset:3px}
-.FormFiles{color:var(--Ice);font:inherit;max-width:100%}
-.FormFiles::file-selector-button{font-family:var(--Display);font-weight:800;font-style:italic;letter-spacing:.08em;background:var(--White);color:var(--Deep);border:none;padding:6px 18px;margin-right:12px;cursor:pointer;clip-path:var(--Slant)}
-.FileList{list-style:none;margin-top:6px;color:var(--Ice);font-size:13px}
 .FormRow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .FormTrap{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .FormSend{align-self:flex-start;font-family:var(--Display);font-weight:900;font-style:italic;font-size:24px;letter-spacing:.08em;background:var(--White);color:var(--Deep);padding:4px 34px;clip-path:var(--Slant);transition:background .15s ease}
@@ -129,4 +154,6 @@ a.Post:hover{background:rgba(4,13,43,.75);border-left-color:var(--White)}
 	.GameStat b{font-size:26px}
 	.Post{flex-direction:column;gap:4px}
 	.FormRow{grid-template-columns:1fr}
+	.RequestForm{grid-template-columns:1fr}
+	.Estimate{position:static;order:-1}
 }

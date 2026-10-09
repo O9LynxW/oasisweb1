@@ -1,40 +1,10 @@
 import { Create, BuildPage, BuildTabs, OpenExternal, Wrap } from "../Dom.js"
+import { FormatPrice } from "../Format.js"
 import { BuildRequestForm } from "./RequestForm.js"
 
 const TabLabels = ["RATES", "PAYMENT", "REQUEST"]
 const QuoteText = "price depends on scope, i'll explain any change before starting it."
 const PayPalUrl = "https://paypal.me/oasis098"
-
-const RateGroups = [
-	{
-		Title: "SCRIPTING",
-		Detail: "same day to a week, depending on the extent of what's needed",
-		Tiers: [
-			{ Name: "One Skill", Price: "$22", Scope: "PER JOB", Note: "front end." },
-			{ Name: "Movement System", Price: "$45", Scope: "PER JOB", Note: "" },
-			{ Name: "Backend Framework", Price: "$110", Scope: "PER JOB", Note: "" },
-			{ Name: "Basic Combat", Price: "$150", Scope: "PACKAGE", Note: "basic attack, heavy attack, block, stun, parry and dodge." },
-			{ Name: "Advanced Combat", Price: "$190", Scope: "PACKAGE",
-				Note: "everything in basic, 50% off extra skills, plus ongoing support for bugs and compatibility." },
-		],
-	},
-	{
-		Title: "VFX",
-		Detail: "scales with difficulty. no cutscenes",
-		Tiers: [
-			{ Name: "One Move", Price: "$10", Scope: "PER MOVE", Note: "or R$5,000 per move." },
-		],
-	},
-	{
-		Title: "SFX",
-		Detail: "send a good quality clip of what it's for. 2 free revisions, $5 each after",
-		Tiers: [
-			{ Name: "Simple", Price: "$5", Scope: "PER SOUND", Note: "ui, menus, pickups and simple one-shots." },
-			{ Name: "Abilities", Price: "$15", Scope: "PER SOUND", Note: "skills and combat hits, layered and designed from scratch." },
-			{ Name: "Cutscenes", Price: "$20", Scope: "PER SOUND", Note: "cutscenes, trailers, anything that needs to carry a scene." },
-		],
-	},
-]
 
 const Currencies = [
 	{ Emoji: "\u{1F4B5}", Icon: null, Name: "USD", Preferred: true },
@@ -47,7 +17,6 @@ const PaymentRules = [
 	"paypal is preferred. if it isn't available to you, we can talk about other ways to pay.",
 	"once work on a commission begins, there are no refunds.",
 	"paying in robux? you cover the 30% marketplace tax. R$350 = $1.",
-	"rush delivery is +25%.",
 	"everything is built to match your game's style.",
 	"% work is negotiable.",
 ]
@@ -62,7 +31,7 @@ function BuildTier(Tier) {
 	const Card = Create("div", "Tier")
 	const Head = Create("div", "TierHead")
 	Head.appendChild(Create("h4", null, Tier.Name))
-	Head.appendChild(Create("b", "TierPrice", Tier.Price))
+	Head.appendChild(Create("b", "TierPrice", FormatPrice(Tier.Price)))
 	Card.appendChild(Head)
 	Card.appendChild(Create("small", null, Tier.Scope))
 	if (Tier.Note) Card.appendChild(Create("p", null, Tier.Note))
@@ -74,7 +43,7 @@ function BuildRates() {
 	Quote.appendChild(Create("b", null, "dm for inquiries. "))
 	Quote.appendChild(document.createTextNode(QuoteText))
 
-	const Groups = RateGroups.map(function (Group) {
+	const Groups = Context.Rates.Groups.map(function (Group) {
 		const Section = Create("section", "RateGroup")
 		const Head = Create("div", "RateHead")
 		Head.appendChild(Create("h3", null, Group.Title))
@@ -113,7 +82,8 @@ function BuildPayment() {
 	PayPal.appendChild(document.createTextNode("PAY WITH PAYPAL"))
 
 	const List = Create("ol", "Terms")
-	PaymentRules.forEach(function (Rule) { List.appendChild(Create("li", null, Rule)) })
+	const Rules = PaymentRules.concat("rush delivery is +" + Context.Rates.RushPercent + "%.")
+	Rules.forEach(function (Rule) { List.appendChild(Create("li", null, Rule)) })
 	return [Row, PayPal, List]
 }
 

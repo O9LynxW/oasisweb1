@@ -1,4 +1,4 @@
-import { TimeOfDay } from "./Format.js"
+import { FormatCount, TimeOfDay } from "./Format.js"
 
 const DayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
 const ClockRefreshMs = 30000
@@ -6,6 +6,7 @@ const PresenceRefreshMs = 60000
 const LanyardUrl = "https://api.lanyard.rest/v1/users/"
 const StatusLabels = { online: "ONLINE", idle: "IDLE", dnd: "DO NOT DISTURB", offline: "OFFLINE" }
 const StatusClasses = { idle: "Idle", dnd: "Dnd", offline: "Offline" }
+const VisitedKey = "OasisVisitCounted"
 
 function RenderClock(DateElement, TimeElement) {
 	const Now = new Date()
@@ -60,4 +61,39 @@ export function StartPresence(UserId, Elements) {
 	document.addEventListener("visibilitychange", function () {
 		if (!document.hidden) FetchPresence(UserId, Elements)
 	})
+}
+
+function AlreadyCounted() {
+	try {
+		return window.sessionStorage.getItem(VisitedKey) === "yes"
+	} catch {
+		return true
+	}
+}
+
+function MarkCounted() {
+	try {
+		window.sessionStorage.setItem(VisitedKey, "yes")
+	} catch {
+		return
+	}
+}
+
+export async function StartVisitCounter(Url, Element) {
+	if (!Url) return
+	const ShouldCount = !AlreadyCounted()
+
+	try {
+		const Reply = ShouldCount
+			? await fetch(Url, { method: "POST", body: JSON.stringify({ Referrer: document.referrer }) })
+			: await fetch(Url, { cache: "no-store" })
+		if (!Reply.ok) return
+		const Result = await Reply.json()
+		if (!Result || !Number.isFinite(Result.Count)) return
+		if (ShouldCount) MarkCounted()
+		Element.textContent = "SITE VISITS " + FormatCount(Result.Count)
+		Element.hidden = false
+	} catch {
+		return
+	}
 }

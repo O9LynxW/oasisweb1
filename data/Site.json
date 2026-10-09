@@ -1,6 +1,13 @@
 {
 	"DiscordUserId": "890630436840173579",
 	"CommissionUrl": "https://kaosbot.mosham.workers.dev/Commission",
+	"VisitsUrl": "https://kaosbot.mosham.workers.dev/Visit",
+	"TimeZone": "Europe/London",
+	"TimeZoneLabel": "UK",
+	"WorkHours": [
+		{ "Days": [0, 1, 2, 3, 4, 5], "Start": "18:00", "End": "01:30" },
+		{ "Days": [6], "Start": "18:00", "End": "00:00" }
+	],
 	"Links": [
 		{ "Title": "Discord", "Subtitle": "DM ME", "Url": "https://discord.com/users/890630436840173579" },
 		{ "Title": "Server", "Subtitle": "PORTFOLIO", "Url": "https://discord.gg/BvD82jZ8K6" },

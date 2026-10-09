@@ -39,3 +39,7 @@ export function FormatDate(Iso) {
 	if (!Match) return ""
 	return Match[1] + "/" + Match[2]
 }
+
+export function FormatPrice(Value) {
+	return "$" + (Number.isInteger(Value) ? String(Value) : Value.toFixed(2))
+}

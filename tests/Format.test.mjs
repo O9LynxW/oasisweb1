@@ -1,6 +1,6 @@
 import { test } from "node:test"
 import Assert from "node:assert/strict"
-import { FormatCount, TimeOfDay, FormatDate } from "../js/Format.js"
+import { FormatCount, TimeOfDay, FormatDate, FormatPrice } from "../js/Format.js"
 
 test("FormatCount shortens large numbers", function () {
 	Assert.equal(FormatCount(818708614), "818.7M")
@@ -28,4 +28,9 @@ test("TimeOfDay names the part of the day", function () {
 test("FormatDate gives month and day", function () {
 	Assert.equal(FormatDate("2026-10-09"), "10/09")
 	Assert.equal(FormatDate("nonsense"), "")
+})
+
+test("FormatPrice shows whole dollars plainly and cents when needed", function () {
+	Assert.equal(FormatPrice(75), "$75")
+	Assert.equal(FormatPrice(93.75), "$93.75")
 })

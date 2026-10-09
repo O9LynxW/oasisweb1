@@ -15,6 +15,9 @@ const test = Base.extend({
 		await page.route("https://api.lanyard.rest/**", function (Route) {
 			Route.fulfill({ json: LanyardReply })
 		})
+		await page.route("https://kaosbot.mosham.workers.dev/Visit", function (Route) {
+			Route.fulfill({ json: { Count: 221 } })
+		})
 		await Use(page)
 		expect(Errors).toEqual([])
 	},
@@ -96,6 +99,45 @@ test.describe("shell", function () {
 	test("old site links still open the right screen", async function ({ page }) {
 		await page.goto("/#Current")
 		await expect(page.locator("#ScreenCommissions")).toBeVisible()
+	})
+})
+
+test.describe("work clock", function () {
+	test.use({ timezoneId: "America/New_York" })
+
+	test("shows my time, the visitor's time, hours and status", async function ({ page }) {
+		await page.clock.setFixedTime(new Date("2026-10-10T18:00:00Z"))
+		await EnterMenu(page)
+		await expect(page.locator(".ClockStatus")).toHaveText("WORKING NOW")
+		await expect(page.locator(".ClockRow", { hasText: "MY TIME" }).locator("b")).toHaveText("7PM UK")
+		await expect(page.locator(".ClockRow", { hasText: "YOUR TIME" }).locator("b")).toHaveText("2PM")
+		await expect(page.locator(".ClockRow", { hasText: "WORK HOURS" }).locator("b")).toHaveText("SUN-FRI 6PM-1:30AM / SAT 6PM-12AM UK")
+	})
+
+	test("says when i am back while off", async function ({ page }) {
+		await page.clock.setFixedTime(new Date("2026-10-14T11:00:00Z"))
+		await EnterMenu(page)
+		await expect(page.locator(".ClockStatus")).toHaveText("OFF, BACK 6PM UK")
+	})
+})
+
+test.describe("visits", function () {
+	test("counts a visit once per session and shows the total", async function ({ page }) {
+		const Methods = []
+		page.on("request", function (Request_) {
+			if (Request_.url().endsWith("/Visit")) Methods.push(Request_.method())
+		})
+		await page.goto("/")
+		await expect(page.locator("#HudVisits")).toHaveText("SITE VISITS 221")
+		await page.reload()
+		await expect(page.locator("#HudVisits")).toHaveText("SITE VISITS 221")
+		expect(Methods).toEqual(["POST", "GET"])
+	})
+
+	test("a failing counter just hides the line", async function ({ page }) {
+		await page.route("https://kaosbot.mosham.workers.dev/Visit", function (Route) { Route.abort() })
+		await EnterMenu(page)
+		await expect(page.locator("#HudVisits")).toBeHidden()
 	})
 })
 
@@ -247,14 +289,31 @@ test.describe("request form", function () {
 		await expect(Page.locator(".RequestForm")).toBeVisible()
 	}
 
-	async function FillBasics(Page) {
-		await Page.locator("input[name='Discord']").fill("oasis")
-		await Page.locator(".KindOption", { hasText: "SFX" }).click()
-		await Page.locator(".KindOption", { hasText: "VFX" }).click()
-		await Page.locator("textarea[name='Details']").fill("a cleave skill with full sound design")
+	async function PickAbilities(Page, Count) {
+		await Page.locator(".PickChip", { hasText: "SFX" }).click()
+		const Plus = Page.locator(".PickRow", { hasText: "Abilities" }).locator(".StepButton", { hasText: "+" })
+		for (let I = 0; I < Count; I++) {
+			await Plus.click()
+		}
 	}
 
-	test("sends every field and the files to mosham, then clears", async function ({ page }) {
+	async function FillBasics(Page) {
+		await Page.locator("input[name='Discord']").fill("oasis")
+		await PickAbilities(Page, 5)
+		await Page.locator("textarea[name='Details']").fill("five ability sounds for a combat kit")
+	}
+
+	test("the estimate adds up the picked items and rush", async function ({ page }) {
+		await OpenRequest(page)
+		await expect(page.locator(".EstimateTotal")).toHaveText("from $0")
+		await PickAbilities(page, 5)
+		await expect(page.locator(".EstimateLines li")).toHaveText(["5 x Abilities SFX$75"])
+		await expect(page.locator(".EstimateTotal")).toHaveText("from $75")
+		await page.locator(".EstimateRush").click()
+		await expect(page.locator(".EstimateTotal")).toHaveText("from $93.75")
+	})
+
+	test("sends the order, estimate and files to mosham, then clears", async function ({ page }) {
 		let Posted = null
 		await page.route(WorkerUrl, async function (Route) {
 			Posted = Route.request().postData()
@@ -262,16 +321,37 @@ test.describe("request form", function () {
 		})
 		await OpenRequest(page)
 		await FillBasics(page)
-		await page.locator("input[name='Budget']").fill("$40")
-		await page.locator("input[name='Files']").setInputFiles({ name: "ref.png", mimeType: "image/png", buffer: Buffer.alloc(64) })
-		await expect(page.locator(".FileList li")).toHaveText(["ref.png (1 KB)"])
+		await page.locator(".DropInput").setInputFiles({ name: "ref.png", mimeType: "image/png", buffer: Buffer.alloc(64) })
+		await expect(page.locator(".FileChip")).toHaveText(["ref.png (1 KB)x"])
 		await page.locator(".FormSend").click()
 		await expect(page.locator(".FormStatus")).toHaveText("sent! i'll message you on discord soon.")
 		expect(Posted).toContain("name=\"Discord\"\r\n\r\noasis")
-		expect(Posted).toContain("name=\"Kinds\"\r\n\r\nVFX")
 		expect(Posted).toContain("name=\"Kinds\"\r\n\r\nSFX")
+		expect(Posted).toContain("name=\"Order\"\r\n\r\n5 x Abilities SFX $75")
+		expect(Posted).toContain("name=\"Estimate\"\r\n\r\nfrom $75")
 		expect(Posted).toContain("filename=\"ref.png\"")
 		await expect(page.locator("input[name='Discord']")).toHaveValue("")
+		await expect(page.locator(".EstimateTotal")).toHaveText("from $0")
+		await expect(page.locator(".FileChip")).toHaveCount(0)
+	})
+
+	test("a removed file is not sent", async function ({ page }) {
+		let Posted = null
+		await page.route(WorkerUrl, async function (Route) {
+			Posted = Route.request().postData()
+			await Route.fulfill({ json: { Accepted: true } })
+		})
+		await OpenRequest(page)
+		await FillBasics(page)
+		await page.locator(".DropInput").setInputFiles([
+			{ name: "keep.png", mimeType: "image/png", buffer: Buffer.alloc(8) },
+			{ name: "drop.png", mimeType: "image/png", buffer: Buffer.alloc(8) },
+		])
+		await page.locator(".FileChip", { hasText: "drop.png" }).locator(".FileRemove").click()
+		await page.locator(".FormSend").click()
+		await expect(page.locator(".FormStatus")).toHaveText("sent! i'll message you on discord soon.")
+		expect(Posted).toContain("filename=\"keep.png\"")
+		expect(Posted).not.toContain("filename=\"drop.png\"")
 	})
 
 	test("shows the reason mosham gives when it refuses", async function ({ page }) {
@@ -284,7 +364,20 @@ test.describe("request form", function () {
 		await expect(page.locator(".FormStatus")).toHaveText("Tell me a bit more about what you need")
 	})
 
-	test("blocks too many attachments before sending", async function ({ page }) {
+	test("needs something picked before sending", async function ({ page }) {
+		let Calls = 0
+		await page.route(WorkerUrl, function (Route) {
+			Calls += 1
+			Route.fulfill({ json: { Accepted: true } })
+		})
+		await OpenRequest(page)
+		await page.locator("input[name='Discord']").fill("oasis")
+		await page.locator(".FormSend").click()
+		await expect(page.locator(".FormStatus")).toHaveText("pick at least one thing you need, or tick other.")
+		expect(Calls).toBe(0)
+	})
+
+	test("blocks too many or too big attachments before sending", async function ({ page }) {
 		let Calls = 0
 		await page.route(WorkerUrl, function (Route) {
 			Calls += 1
@@ -292,12 +385,17 @@ test.describe("request form", function () {
 		})
 		await OpenRequest(page)
 		await FillBasics(page)
-		const Files = [1, 2, 3, 4, 5].map(function (I) {
+		const Files = Array.from({ length: 11 }, function (_, I) {
 			return { name: "ref" + I + ".png", mimeType: "image/png", buffer: Buffer.alloc(8) }
 		})
-		await page.locator("input[name='Files']").setInputFiles(Files)
+		await page.locator(".DropInput").setInputFiles(Files)
 		await page.locator(".FormSend").click()
-		await expect(page.locator(".FormStatus")).toHaveText("attach 4 files or fewer.")
+		await expect(page.locator(".FormStatus")).toHaveText("attach 10 files or fewer.")
+		await page.locator(".FileChip").first().locator(".FileRemove").click()
+		await page.locator(".FileChip").first().locator(".FileRemove").click()
+		await page.locator(".DropInput").setInputFiles({ name: "huge.mp4", mimeType: "video/mp4", buffer: Buffer.alloc(21000000) })
+		await page.locator(".FormSend").click()
+		await expect(page.locator(".FormStatus")).toHaveText("huge.mp4 is over 20 MB. paste a link to it instead.")
 		expect(Calls).toBe(0)
 	})
 

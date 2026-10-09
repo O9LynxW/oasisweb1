@@ -1,6 +1,6 @@
 import { test } from "node:test"
 import Assert from "node:assert/strict"
-import { CleanGames, CleanWorks, CleanPosts, CleanArt, CleanStats, CleanSite } from "../js/Data.js"
+import { CleanGames, CleanWorks, CleanPosts, CleanArt, CleanRates, CleanStats, CleanSite } from "../js/Data.js"
 
 const BadPayloads = [null, "text", {}, 42, []]
 
@@ -46,6 +46,19 @@ test("CleanArt drops pieces without an image and falls back to the image as thum
 	Assert.deepEqual(Art, [{ Image: "b.jpg", Thumb: "b.jpg" }, { Image: "c.jpg", Thumb: "c-Thumb.jpg" }])
 })
 
+test("CleanRates keeps known kinds and numeric prices", function () {
+	const Rates = CleanRates({
+		RushPercent: 25,
+		Groups: [
+			{ Title: "SFX", Kind: "SFX", Tiers: [{ Name: "Abilities", Price: 15 }, { Price: 3 }] },
+			{ Title: "MUSIC", Kind: "Music", Tiers: [{ Name: "Song", Price: 99 }] },
+		],
+	})
+	Assert.equal(Rates.RushPercent, 25)
+	Assert.equal(Rates.Groups.length, 1)
+	Assert.deepEqual(Rates.Groups[0].Tiers.map(function (Tier) { return [Tier.Name, Tier.Price] }), [["Abilities", 15]])
+})
+
 test("CleanStats gives zero totals for nothing", function () {
 	const Stats = CleanStats(null)
 	Assert.deepEqual(Stats.Totals, { Visits: 0, Favorites: 0, Playing: 0 })
@@ -70,6 +83,7 @@ test("every cleaner survives bad payloads", function () {
 		Assert.deepEqual(CleanWorks(Payload), [])
 		Assert.deepEqual(CleanPosts(Payload), [])
 		Assert.deepEqual(CleanArt(Payload), [])
+		Assert.deepEqual(CleanRates(Payload).Groups, [])
 		Assert.equal(CleanStats(Payload).Totals.Visits, 0)
 		Assert.deepEqual(CleanSite(Payload).Links, [])
 	})

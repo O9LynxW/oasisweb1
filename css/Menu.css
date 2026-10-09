@@ -8,6 +8,15 @@
 .MainStat:first-child b{color:var(--White);text-shadow:4px 4px 0 var(--Deep)}
 .MainStat:not(:first-child) b{color:var(--Ice)}
 
+.WorkClock{display:flex;flex-direction:column;align-items:flex-end;gap:3px;margin-top:22px}
+.ClockRow{display:flex;align-items:baseline;justify-content:flex-end;gap:10px}
+.ClockRow small{font-weight:700;font-size:11px;letter-spacing:.24em;color:var(--Cyan)}
+.ClockRow b{font-weight:800;font-style:italic;font-size:18px;letter-spacing:.04em}
+.ClockStatus{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-style:italic;font-size:15px;letter-spacing:.14em;color:var(--Ice);margin-bottom:4px}
+.ClockStatus::before{content:"";width:8px;height:8px;background:#7d8aa6;transform:rotate(45deg)}
+.ClockStatus.Working{color:var(--White)}
+.ClockStatus.Working::before{background:var(--Green)}
+
 .Menu{position:absolute;left:0;bottom:11vh;display:flex;flex-direction:column;gap:2px;transform:rotate(-7deg);transform-origin:left bottom}
 .MenuItem{position:relative;display:block;font-family:var(--Display);font-weight:800;font-style:italic;font-size:clamp(36px,5vw,68px);line-height:1.05;text-transform:uppercase;padding:0 64px 0 var(--Gutter);color:rgba(207,228,255,.72);transition:color .15s ease,transform .25s var(--Snap);isolation:isolate}
 .MenuItem::before{content:"";position:absolute;inset:6% 0;background:var(--White);clip-path:var(--Slant);transform:scaleX(0);transform-origin:left;transition:transform .22s var(--Snap);z-index:-1}
@@ -22,6 +31,10 @@
 	.MainName{top:12vh;right:20px;left:20px}
 	.MainStats{gap:16px}
 	.MainStat small{font-size:10px;letter-spacing:.2em}
+	.WorkClock{margin-top:14px;gap:1px}
+	.ClockRow b{font-size:14px}
+	.ClockRow small{font-size:9px}
+	.ClockStatus{font-size:13px}
 	.Menu{bottom:15vh;transform:rotate(-5deg)}
 	.MenuItem{font-size:clamp(40px,11vw,56px);padding-right:44px}
 }

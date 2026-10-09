@@ -1,5 +1,6 @@
 import { Create, Wrap } from "../Dom.js"
 import { FormatCount } from "../Format.js"
+import { BuildWorkClock } from "../WorkClock.js"
 
 const MenuEntries = [
 	{ Target: "Works", Tag: "CLIPS" },
@@ -34,7 +35,7 @@ function BuildStat(Value, Label) {
 	return Stat
 }
 
-function BuildName(Stats, GameCount) {
+function BuildName(Stats, GameCount, Site) {
 	const Block = Create("div", "MainName")
 	Block.appendChild(Create("p", "MainTitle", "OASIS"))
 	Block.appendChild(Create("div", "MainRole", "SCRIPTER / VFX / UI / SFX"))
@@ -44,6 +45,7 @@ function BuildName(Stats, GameCount) {
 	Row.appendChild(BuildStat(FormatCount(Stats.Totals.Favorites), "FAVORITES"))
 	Row.appendChild(BuildStat(String(GameCount), "GAMES"))
 	Block.appendChild(Row)
+	Block.appendChild(BuildWorkClock(Site))
 	return Block
 }
 
@@ -76,7 +78,7 @@ export const Name = "Main"
 
 export function Mount(Root, SharedContext) {
 	Context = SharedContext
-	Root.appendChild(BuildName(Context.Stats, Context.Games.length))
+	Root.appendChild(BuildName(Context.Stats, Context.Games.length, Context.Site))
 	Root.appendChild(BuildMenu())
 	SetActive(0)
 }

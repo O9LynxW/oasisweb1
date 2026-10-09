@@ -1,3 +1,5 @@
+import { ParseClock } from "./WorkClock.js"
+
 const WorkCategories = ["SFX", "VFX", "UI", "Scripting"]
 const GameStatuses = ["Live", "InDevelopment", "Contribution"]
 
@@ -101,6 +103,34 @@ export function CleanArt(Payload) {
 		})
 }
 
+function CleanTier(Tier) {
+	return {
+		Name: Text(Tier.Name),
+		Price: Count(Tier.Price),
+		Scope: Text(Tier.Scope),
+		Note: Text(Tier.Note),
+	}
+}
+
+export function CleanRates(Payload) {
+	const Source = IsObject(Payload) ? Payload : {}
+	return {
+		RushPercent: Count(Source.RushPercent),
+		Groups: ListFrom(Source.Groups, "Groups")
+			.filter(function (Group) { return WorkCategories.includes(Group.Kind) })
+			.map(function (Group) {
+				return {
+					Title: Text(Group.Title),
+					Kind: Group.Kind,
+					Detail: Text(Group.Detail),
+					Tiers: ListFrom(Group.Tiers, "Tiers")
+						.filter(function (Tier) { return Text(Tier.Name).trim() !== "" })
+						.map(CleanTier),
+				}
+			}),
+	}
+}
+
 export function CleanStats(Payload) {
 	const Source = IsObject(Payload) ? Payload : {}
 	const Games = {}
@@ -117,6 +147,24 @@ export function CleanStats(Payload) {
 	}
 }
 
+function IsTimeZone(Value) {
+	try {
+		new Intl.DateTimeFormat("en-GB", { timeZone: Text(Value) })
+		return Text(Value) !== ""
+	} catch {
+		return false
+	}
+}
+
+function CleanWorkHours(Payload) {
+	return ListFrom(Payload, "WorkHours")
+		.map(function (Block) {
+			const Days = Array.isArray(Block.Days) ? Block.Days.filter(function (Day) { return Number.isInteger(Day) && Day >= 0 && Day <= 6 }) : []
+			return { Days: Days, Start: ParseClock(Block.Start), End: ParseClock(Block.End) }
+		})
+		.filter(function (Block) { return Block.Days.length > 0 && Block.Start !== null && Block.End !== null })
+}
+
 export function CleanSite(Payload) {
 	const Source = IsObject(Payload) ? Payload : {}
 	const Track = IsObject(Source.Track) ? Source.Track : {}
@@ -124,6 +172,10 @@ export function CleanSite(Payload) {
 	return {
 		DiscordUserId: /^[0-9]{5,25}$/.test(Text(Source.DiscordUserId)) ? Text(Source.DiscordUserId) : null,
 		CommissionUrl: IsWebUrl(Source.CommissionUrl) ? Text(Source.CommissionUrl) : null,
+		VisitsUrl: IsWebUrl(Source.VisitsUrl) ? Text(Source.VisitsUrl) : null,
+		TimeZone: IsTimeZone(Source.TimeZone) ? Text(Source.TimeZone) : null,
+		TimeZoneLabel: Text(Source.TimeZoneLabel),
+		WorkHours: CleanWorkHours(Source.WorkHours),
 		Links: ListFrom(Source.Links, "Links")
 			.filter(function (Link) { return IsWebUrl(Link.Url) })
 			.map(function (Link) {
