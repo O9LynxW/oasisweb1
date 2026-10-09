@@ -466,3 +466,58 @@ test.describe("reduced motion", function () {
 		await expect(page.locator("#ScreenWorks")).toBeVisible({ timeout: 150 })
 	})
 })
+
+for (const Viewport of [{ width: 412, height: 760 }, { width: 390, height: 844 }, { width: 360, height: 640 }]) {
+	test.describe("main menu on a " + Viewport.width + "x" + Viewport.height + " phone", function () {
+		test.use({ viewport: Viewport, hasTouch: true })
+
+		test("nothing on the main menu overlaps and the last item clears the player", async function ({ page }) {
+			await EnterMenu(page)
+			const Result = await page.evaluate(function () {
+				const Visible = function (Element) {
+					const Range = document.createRange()
+					Range.selectNodeContents(Element)
+					const Box = Range.getBoundingClientRect()
+					return { Left: Box.left, Right: Box.right, Top: Box.top, Bottom: Box.bottom }
+				}
+				const Piece = function (Group, Element, Label) {
+					return Object.assign({ Group: Group, Name: Label }, Visible(Element))
+				}
+				const Pieces = [Piece("badge", document.getElementById("HudVisits"), "visits badge")]
+				;[".MainTitle", ".MainRole", ".MainStats", ".WorkClock"].forEach(function (Selector) {
+					Pieces.push(Piece("name", document.querySelector(Selector), Selector))
+				})
+				document.querySelectorAll(".ClockRow, .ClockStatus").forEach(function (Row, Index) {
+					Pieces.push(Piece("name", Row, "clock line " + Index))
+				})
+				document.querySelectorAll(".MenuItem").forEach(function (Item) {
+					Pieces.push(Piece("menu", Item, "menu " + Item.firstChild.textContent))
+				})
+				const Overlaps = []
+				Pieces.forEach(function (First, Index) {
+					Pieces.slice(Index + 1).forEach(function (Second) {
+						if (First.Group === Second.Group) return
+						const Apart = First.Right <= Second.Left || Second.Right <= First.Left ||
+							First.Bottom <= Second.Top || Second.Bottom <= First.Top
+						if (!Apart) Overlaps.push(First.Name + " + " + Second.Name)
+					})
+				})
+				const Screen = document.getElementById("ScreenMain")
+				Screen.scrollTop = Screen.scrollHeight
+				const Items = document.querySelectorAll(".MenuItem")
+				const LastBottom = Items[Items.length - 1].getBoundingClientRect().bottom
+				const PlayerTop = document.getElementById("Player").getBoundingClientRect().top
+				return { Overlaps: Overlaps, LastClears: LastBottom <= PlayerTop }
+			})
+			expect(Result.Overlaps).toEqual([])
+			expect(Result.LastClears).toBe(true)
+		})
+	})
+}
+
+test("a game with no description shows no empty line", async function ({ page }) {
+	await OpenScreen(page, "Games")
+	await page.locator(".GameItem", { hasText: "Blades of Chance" }).click()
+	await expect(page.locator(".GameRole")).toHaveText("FULLSTACK")
+	await expect(page.locator(".GameBlurb")).toHaveCount(0)
+})

@@ -28,15 +28,18 @@
 .MenuItem.Active small{opacity:1}
 
 @media(max-width:760px){
-	.MainName{top:12vh;right:20px;left:20px}
-	.MainStats{gap:16px}
+	#ScreenMain.Shown{display:flex;flex-direction:column;justify-content:space-between;gap:30px;padding:106px 0 96px;overflow-y:auto;overflow-x:hidden}
+	.MainName{position:static;padding:0 20px}
+	.MainTitle{font-size:clamp(56px,min(20vw,10vh),100px)}
+	.MainStats{gap:16px;margin-top:12px}
+	.MainStat b{font-size:clamp(26px,8vw,36px)}
 	.MainStat small{font-size:10px;letter-spacing:.2em}
-	.WorkClock{margin-top:14px;gap:1px}
+	.WorkClock{margin-top:10px;gap:0}
 	.ClockRow b{font-size:14px}
 	.ClockRow small{font-size:9px}
 	.ClockStatus{font-size:13px}
-	.Menu{bottom:15vh;transform:rotate(-5deg)}
-	.MenuItem{font-size:clamp(40px,11vw,56px);padding-right:44px}
+	.Menu{position:static;flex-shrink:0;gap:0;transform:rotate(-3deg);transform-origin:left center}
+	.MenuItem{font-size:clamp(30px,min(9.5vw,5.2vh),50px);line-height:1.02;padding-right:44px}
 }
 
 @media(max-height:620px) and (min-width:761px){

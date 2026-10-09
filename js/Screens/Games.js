@@ -38,7 +38,7 @@ function BuildPanelContent(Game) {
 	}
 	Parts.push(Thumb)
 	Parts.push(Create("div", "GameRole", Game.Role.toUpperCase()))
-	Parts.push(Create("p", "GameBlurb", Game.Blurb))
+	if (Game.Blurb) Parts.push(Create("p", "GameBlurb", Game.Blurb))
 
 	const Actions = Create("div", "GameActions")
 	const GameStats = Game.PlaceId ? Context.Stats.Games[Game.PlaceId] : null
