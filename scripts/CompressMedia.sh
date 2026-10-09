@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 set -euo pipefail
 
 SourceRoot="$1"
@@ -35,7 +34,7 @@ Clips=(
 	"Roport/EnergyPunchCombo.mp4|EnergyPunchCombo|Sfx"
 )
 
-Games=(TypeSoul BladesOfChance BratDuels Veyth Vania SteelVelocity Seraphs MultiMayhem)
+Games=(TypeSoul BladesOfChance BratDuels Veyth Vania SteelVelocity Seraphs MultiMayhem Calamity AnimeVerse)
 
 mkdir -p "$WorksOut" "$GamesOut" "$AudioOut"
 

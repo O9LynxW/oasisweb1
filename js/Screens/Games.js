@@ -2,6 +2,8 @@ import { Create, BuildPage, BuildEmpty, OpenExternal, Wrap } from "../Dom.js"
 import { FormatCount } from "../Format.js"
 
 const PlayUrl = "https://www.roblox.com/games/"
+const StatusTags = { InDevelopment: "IN DEVELOPMENT", Contribution: "CONTRIBUTION" }
+const ContributionLabel = "CONTRIBUTED TO"
 
 let Context = null
 let Items = []
@@ -40,14 +42,17 @@ function BuildPanelContent(Game) {
 
 	const Actions = Create("div", "GameActions")
 	const GameStats = Game.PlaceId ? Context.Stats.Games[Game.PlaceId] : null
-	if (Game.Status === "InDevelopment") {
-		Actions.appendChild(Create("div", "GameTag", "IN DEVELOPMENT"))
+	if (StatusTags[Game.Status]) {
+		Actions.appendChild(Create("div", "GameTag", StatusTags[Game.Status]))
 	} else if (GameStats) {
 		Actions.appendChild(BuildStats(GameStats))
 	}
 
 	if (Game.PlaceId && Game.Status === "Live") {
 		Actions.appendChild(OpenExternal(Create("a", "GamePlay", "PLAY"), PlayUrl + encodeURIComponent(Game.PlaceId)))
+	}
+	if (Game.Link) {
+		Actions.appendChild(OpenExternal(Create("a", "GamePlay GameLink", "DISCORD"), Game.Link))
 	}
 	Parts.push(Actions)
 	return Parts
@@ -93,7 +98,9 @@ export function Mount(Root, SharedContext) {
 	Panel = Create("div", "GamePanel")
 	Panel.setAttribute("role", "tabpanel")
 
+	const FirstContribution = Context.Games.findIndex(function (Game) { return Game.Status === "Contribution" })
 	Items = Context.Games.map(function (Game, Index) {
+		if (Index === FirstContribution) List.appendChild(Create("div", "GameGroup", ContributionLabel))
 		const Item = Create("button", "GameItem", Game.Name)
 		Item.setAttribute("role", "tab")
 		Item.addEventListener("mouseenter", function () {

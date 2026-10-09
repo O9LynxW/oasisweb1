@@ -21,6 +21,7 @@
 
 .Games{display:grid;grid-template-columns:minmax(220px,320px) minmax(0,1fr);gap:4vw;max-width:1280px}
 .GameList{display:flex;flex-direction:column;gap:4px}
+.GameGroup{font-family:var(--Display);font-weight:700;font-size:12px;letter-spacing:.3em;color:var(--Cyan);margin:18px 0 4px 18px}
 .GameItem{position:relative;font-family:var(--Display);font-weight:800;font-style:italic;font-size:28px;text-transform:uppercase;padding:2px 18px;color:rgba(207,228,255,.72);isolation:isolate;transition:color .15s ease,transform .2s var(--Snap)}
 .GameItem.Active{color:var(--Deep);transform:translateX(12px)}
 .GameItem.Active::before{content:"";position:absolute;inset:0;background:var(--White);clip-path:var(--Slant);z-index:-1}
@@ -95,6 +96,7 @@ a.Post:hover{background:rgba(4,13,43,.75);border-left-color:var(--White)}
 	.Games{grid-template-columns:1fr;gap:20px}
 	.GameList{flex-direction:row;flex-wrap:wrap}
 	.GameItem{font-size:20px;padding:2px 14px}
+	.GameGroup{flex-basis:100%;margin:10px 0 0 14px}
 	.ViewerPanel{grid-template-columns:1fr;gap:16px}
 }
 

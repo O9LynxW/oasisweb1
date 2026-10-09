@@ -40,7 +40,7 @@ test.describe("shell", function () {
 		await EnterMenu(page)
 		await expect(page.locator(".MainTitle")).toHaveText("OASIS")
 		await expect(page.locator(".MainStat").first()).toContainText("833.9M")
-		await expect(page.locator(".MainStat").nth(2)).toContainText("8")
+		await expect(page.locator(".MainStat").nth(2)).toContainText("10")
 		await expect(page.locator("#PresenceLabel")).toHaveText("IDLE")
 	})
 
@@ -135,7 +135,7 @@ test.describe("works", function () {
 		await page.locator(".WorkTile").first().click()
 		await expect(page.locator(".Viewer")).toBeVisible()
 		await expect(page.locator(".ViewerTitle")).toHaveText("Stylised Flashstep")
-		await expect(page.locator(".ViewerMedia video")).toHaveAttribute("src", /HachiCleaveSfx\.mp4$/)
+		await expect(page.locator(".ViewerMedia video")).toHaveAttribute("src", /StylisedFlashstepSfx\.mp4$/)
 		await page.keyboard.press("Escape")
 		await expect(page.locator(".Viewer")).toBeHidden()
 		await expect(page.locator("#ScreenWorks")).toBeVisible()
@@ -160,9 +160,19 @@ test.describe("games", function () {
 		await OpenScreen(page, "Games")
 		await expect(page.locator(".GameItem")).toHaveText([
 			"Type Soul", "Blades of Chance", "Brat Duels", "VEYTH", "Vania", "Steel Velocity", "Seraphs", "Multi Mayhem",
+			"Calamity", "Anime Verse",
 		])
 		await expect(page.locator(".GameStats")).toContainText("818.7M")
 		await expect(page.locator(".GamePlay")).toHaveAttribute("href", "https://www.roblox.com/games/14067600077")
+	})
+
+	test("contributions sit under their own label with a discord link", async function ({ page }) {
+		await OpenScreen(page, "Games")
+		await expect(page.locator(".GameGroup")).toHaveText("CONTRIBUTED TO")
+		await page.locator(".GameItem", { hasText: "Calamity" }).click()
+		await expect(page.locator(".GameTag")).toHaveText("CONTRIBUTION")
+		await expect(page.locator(".GameLink")).toHaveAttribute("href", "https://discord.gg/6KV6gMxdp")
+		await expect(page.locator(".GamePlay:not(.GameLink)")).toHaveCount(0)
 	})
 
 	test("unreleased games show in development with no stats", async function ({ page }) {

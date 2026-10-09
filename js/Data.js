@@ -1,5 +1,5 @@
 const WorkCategories = ["SFX", "VFX", "UI", "Scripting"]
-const GameStatuses = ["Live", "InDevelopment"]
+const GameStatuses = ["Live", "InDevelopment", "Contribution"]
 const JobStatuses = ["Active", "Queued", "Done", "Hidden"]
 
 function IsObject(Value) {
@@ -50,6 +50,7 @@ export function CleanGames(Payload) {
 				Role: Text(Game.Role),
 				Blurb: Text(Game.Blurb),
 				Thumb: OptionalText(Game.Thumb),
+				Link: IsWebUrl(Game.Link) ? Text(Game.Link) : null,
 				Status: GameStatuses.includes(Game.Status) ? Game.Status : "InDevelopment",
 				Order: Number.isFinite(Number(Game.Order)) ? Number(Game.Order) : 0,
 			}

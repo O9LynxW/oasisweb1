@@ -71,6 +71,26 @@
 			"Thumb": "media/Games/MultiMayhem.jpg",
 			"Status": "InDevelopment",
 			"Order": 8
+		},
+		{
+			"Name": "Calamity",
+			"PlaceId": null,
+			"Role": "SFX",
+			"Blurb": "A Jujutsu Kaisen inspired open world RPG that goes all the way back to the Heian era. I do sound design for it.",
+			"Thumb": "media/Games/Calamity.jpg",
+			"Status": "Contribution",
+			"Link": "https://discord.gg/6KV6gMxdp",
+			"Order": 9
+		},
+		{
+			"Name": "Anime Verse",
+			"PlaceId": null,
+			"Role": "SFX",
+			"Blurb": "An anime game in development. I did the sound for the Jinwoo awakening cutscene.",
+			"Thumb": "media/Games/AnimeVerse.jpg",
+			"Status": "Contribution",
+			"Link": "https://discord.gg/5ZeyPBbanG",
+			"Order": 10
 		}
 	]
 }
