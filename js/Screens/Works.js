@@ -119,12 +119,10 @@ function OpenViewer(Work) {
 
 	const Meta = [Work.Category.toUpperCase(), Work.Game.toUpperCase()].filter(Boolean).join(" / ")
 	Viewer.Media.replaceChildren(Media)
-	Viewer.Info.replaceChildren(
-		Create("small", "ViewerMeta", Meta),
-		Create("h3", "ViewerTitle", Work.Title),
-		Create("p", "ViewerNote", Work.Note),
-		Viewer.Close
-	)
+	const Details = [Create("small", "ViewerMeta", Meta), Create("h3", "ViewerTitle", Work.Title)]
+	if (Work.Note) Details.push(Create("p", "ViewerNote", Work.Note))
+	Details.push(Viewer.Close)
+	Viewer.Info.replaceChildren(...Details)
 	Viewer.Overlay.hidden = false
 	Viewer.Close.focus({ preventScroll: true })
 }
