@@ -1,6 +1,5 @@
 const WorkCategories = ["SFX", "VFX", "UI", "Scripting"]
 const GameStatuses = ["Live", "InDevelopment", "Contribution"]
-const JobStatuses = ["Active", "Queued", "Done", "Hidden"]
 
 function IsObject(Value) {
 	return Value !== null && typeof Value === "object" && !Array.isArray(Value)
@@ -86,24 +85,6 @@ export function CleanPosts(Payload) {
 			}
 		})
 		.sort(function (First, Second) { return Second.Date.localeCompare(First.Date) })
-}
-
-export function CleanJobs(Payload) {
-	const IsList = Array.isArray(Payload) || (IsObject(Payload) && Array.isArray(Payload.Jobs))
-	if (!IsList) return null
-
-	return ListFrom(Payload, "Jobs").map(function (Job) {
-		const Tasks = Array.isArray(Job.Tasks) ? Job.Tasks.filter(IsObject) : []
-		return {
-			Project: Job.Project === null || Job.Project === undefined ? "untitled" : String(Job.Project),
-			Client: Text(Job.Client),
-			Status: JobStatuses.includes(Job.Status) ? Job.Status : "Queued",
-			LoggedSeconds: Count(Job.LoggedSeconds),
-			Tasks: Tasks.map(function (Task) {
-				return { Label: Text(Task.Label), Done: Boolean(Task.Done) }
-			}),
-		}
-	})
 }
 
 function CleanGameStats(Value) {

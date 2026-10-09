@@ -185,24 +185,15 @@ test.describe("games", function () {
 })
 
 test.describe("commissions", function () {
-	test("board, rates and payment render", async function ({ page }) {
+	test("rates and payment render with no board", async function ({ page }) {
 		await OpenScreen(page, "Commissions")
-		await expect(page.locator(".Job")).toHaveCount(1)
-		await expect(page.locator(".JobFoot")).toContainText("1 of 2 done")
-		await expect(page.locator(".JobPill")).toHaveText(/working on it/i)
-		await page.keyboard.press("ArrowRight")
+		await expect(page.locator("#ScreenCommissions .Tab")).toHaveText(["RATES", "PAYMENT"])
 		await expect(page.locator(".Tier")).toHaveCount(6)
 		await expect(page.locator(".TierPrice")).toHaveText(["$22", "$45", "$110", "$150", "$190", "$10"])
 		await page.keyboard.press("ArrowRight")
 		await expect(page.locator(".Currency")).toHaveCount(3)
 		await expect(page.locator(".PayPal")).toHaveAttribute("href", "https://paypal.me/oasis098")
 		await expect(page.locator(".Terms li")).toHaveCount(7)
-	})
-
-	test("an empty board says slots are open", async function ({ page }) {
-		await page.route("**/Commissions.json*", function (Route) { Route.fulfill({ json: { Jobs: [] } }) })
-		await OpenScreen(page, "Commissions")
-		await expect(page.locator("#ScreenCommissions .Empty")).toHaveText("nothing on the board right now, slots are open.")
 	})
 })
 

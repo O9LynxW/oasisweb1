@@ -1,6 +1,6 @@
-import { Create, BuildPage, BuildEmpty, BuildTabs, OpenExternal, Wrap } from "../Dom.js"
+import { Create, BuildPage, BuildTabs, OpenExternal, Wrap } from "../Dom.js"
 
-const TabLabels = ["BOARD", "RATES", "PAYMENT"]
+const TabLabels = ["RATES", "PAYMENT"]
 const QuoteText = "price depends on scope, i'll explain any change before starting it."
 const PayPalUrl = "https://paypal.me/oasis098"
 
@@ -42,64 +42,10 @@ const PaymentRules = [
 	"% work is negotiable.",
 ]
 
-const StatusPills = {
-	Active: { Text: "WORKING ON IT", ClassName: "Active" },
-	Done: { Text: "DELIVERED", ClassName: "Done" },
-	Queued: { Text: "QUEUED", ClassName: "Queued" },
-}
-
 let Context = null
 let Tabs = null
 let Content = null
 let ActiveTab = 0
-
-function FormatDuration(Seconds) {
-	const Hours = Math.floor(Seconds / 3600)
-	const Minutes = Math.floor((Seconds % 3600) / 60)
-	if (Hours === 0 && Minutes === 0) return "not started"
-	if (Hours === 0) return Minutes + "m logged"
-	return Hours + "h " + Minutes + "m logged"
-}
-
-function BuildJob(Job) {
-	const Card = Create("article", "Job")
-	const Pill = StatusPills[Job.Status]
-	const Top = Create("div", "JobTop")
-	const Headings = Create("div")
-	Headings.appendChild(Create("h3", "JobTitle", Job.Project))
-	Headings.appendChild(Create("small", "JobClient", Job.Client ? "for " + Job.Client : "private client"))
-	Top.appendChild(Headings)
-	Top.appendChild(Create("span", "JobPill " + Pill.ClassName, Pill.Text))
-	Card.appendChild(Top)
-
-	const DoneCount = Job.Tasks.filter(function (Task) { return Task.Done }).length
-	const Progress = Job.Tasks.length === 0 ? 0 : DoneCount / Job.Tasks.length
-	const Bar = Create("div", "JobBar")
-	const Fill = Create("i", "JobFill")
-	Fill.style.transform = "scaleX(" + Progress + ")"
-	Bar.appendChild(Fill)
-	Card.appendChild(Bar)
-
-	if (Job.Tasks.length > 0) {
-		const List = Create("ul", "JobTasks")
-		Job.Tasks.forEach(function (Task) {
-			List.appendChild(Create("li", Task.Done ? "Complete" : null, Task.Label))
-		})
-		Card.appendChild(List)
-	}
-
-	const Foot = Create("div", "JobFoot")
-	Foot.appendChild(Create("span", null, Job.Tasks.length === 0 ? "no tasks listed" : DoneCount + " of " + Job.Tasks.length + " done"))
-	Foot.appendChild(Create("b", null, FormatDuration(Job.LoggedSeconds)))
-	Card.appendChild(Foot)
-	return Card
-}
-
-function BuildBoard() {
-	const Visible = (Context.Jobs || []).filter(function (Job) { return Job.Status !== "Hidden" })
-	if (Visible.length === 0) return [BuildEmpty("nothing on the board right now, slots are open.")]
-	return Visible.map(BuildJob)
-}
 
 function BuildTier(Tier) {
 	const Card = Create("div", "Tier")
@@ -160,7 +106,7 @@ function BuildPayment() {
 	return [Row, PayPal, List]
 }
 
-const TabBuilders = [BuildBoard, BuildRates, BuildPayment]
+const TabBuilders = [BuildRates, BuildPayment]
 
 function PickTab(Index) {
 	ActiveTab = Wrap(Index, TabLabels.length)

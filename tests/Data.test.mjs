@@ -1,6 +1,6 @@
 import { test } from "node:test"
 import Assert from "node:assert/strict"
-import { CleanGames, CleanWorks, CleanPosts, CleanJobs, CleanStats, CleanSite } from "../js/Data.js"
+import { CleanGames, CleanWorks, CleanPosts, CleanStats, CleanSite } from "../js/Data.js"
 
 const BadPayloads = [null, "text", {}, 42, []]
 
@@ -48,11 +48,6 @@ test("CleanStats gives zero totals for nothing", function () {
 	Assert.equal(Stats.UpdatedAt, null)
 })
 
-test("CleanJobs defaults unknown status to Queued", function () {
-	Assert.equal(CleanJobs({ Jobs: [{ Status: "Weird" }] })[0].Status, "Queued")
-	Assert.equal(CleanJobs([{ Status: "Active" }])[0].Status, "Active")
-})
-
 test("CleanSite drops links that are not http", function () {
 	const Site = CleanSite({
 		Links: [
@@ -71,7 +66,5 @@ test("every cleaner survives bad payloads", function () {
 		Assert.deepEqual(CleanPosts(Payload), [])
 		Assert.equal(CleanStats(Payload).Totals.Visits, 0)
 		Assert.deepEqual(CleanSite(Payload).Links, [])
-		const Jobs = CleanJobs(Payload)
-		Assert.ok(Jobs === null || Array.isArray(Jobs))
 	})
 })

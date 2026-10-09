@@ -1,4 +1,4 @@
-import { LoadJson, CleanGames, CleanWorks, CleanPosts, CleanJobs, CleanStats, CleanSite } from "./Data.js"
+import { LoadJson, CleanGames, CleanWorks, CleanPosts, CleanStats, CleanSite } from "./Data.js"
 import { StartRouter, ScreenFromHash } from "./Router.js"
 import { StartClock, StartPresence } from "./Hud.js"
 import { CreateSounds } from "./Player.js"
@@ -17,7 +17,6 @@ async function LoadContext() {
 		LoadJson("data/Games.json"),
 		LoadJson("data/Works.json"),
 		LoadJson("data/Posts.json"),
-		LoadJson("Commissions.json?v=" + Date.now()),
 		LoadJson("data/Stats.json"),
 		LoadJson("data/Site.json"),
 	])
@@ -26,9 +25,8 @@ async function LoadContext() {
 		Games: CleanGames(Payloads[0]),
 		Works: CleanWorks(Payloads[1]),
 		Posts: CleanPosts(Payloads[2]),
-		Jobs: CleanJobs(Payloads[3]) || [],
-		Stats: CleanStats(Payloads[4]),
-		Site: CleanSite(Payloads[5]),
+		Stats: CleanStats(Payloads[3]),
+		Site: CleanSite(Payloads[4]),
 	}
 }
 

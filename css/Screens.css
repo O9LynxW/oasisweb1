@@ -40,23 +40,6 @@
 .GamePlay:hover{background:var(--Cyan)}
 
 .CommissionContent{max-width:1100px}
-.Job{background:rgba(4,13,43,.55);border-left:6px solid var(--Cyan);padding:18px 22px;margin-bottom:14px;max-width:760px}
-.JobTop{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
-.JobTitle{font-family:var(--Display);font-weight:800;font-style:italic;font-size:28px;text-transform:uppercase;line-height:1}
-.JobClient{color:var(--Ice);font-size:13px}
-.JobPill{font-family:var(--Display);font-weight:800;font-size:13px;letter-spacing:.16em;padding:2px 14px;transform:skewX(-12deg);background:rgba(255,255,255,.1)}
-.JobPill.Active{background:var(--Cyan);color:var(--Deep)}
-.JobPill.Done{background:var(--Green);color:var(--Deep)}
-.JobPill.Queued{background:var(--Amber);color:var(--Deep)}
-.JobBar{height:5px;background:rgba(207,228,255,.15);margin:14px 0;overflow:hidden}
-.JobFill{display:block;height:100%;background:var(--Cyan);transform-origin:left}
-.JobTasks{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.JobTasks li{position:relative;padding-left:20px;color:var(--Ice);font-size:14px}
-.JobTasks li::before{content:"";position:absolute;left:2px;top:.55em;width:8px;height:8px;border:1px solid var(--Ice);transform:rotate(45deg)}
-.JobTasks li.Complete{color:var(--Green);text-decoration:line-through;text-decoration-color:rgba(93,255,155,.5)}
-.JobTasks li.Complete::before{background:var(--Green);border-color:var(--Green)}
-.JobFoot{display:flex;justify-content:space-between;gap:12px;border-top:1px solid rgba(207,228,255,.2);padding-top:10px;font-size:13px;color:var(--Ice)}
-.JobFoot b{font-family:var(--Display);font-weight:800;color:var(--White);font-size:16px}
 
 .Quote{max-width:760px;color:var(--Ice);line-height:1.6;border-left:6px solid var(--White);padding:6px 0 6px 20px;margin-bottom:30px}
 .Quote b{color:var(--White)}
