@@ -1,6 +1,42 @@
 {
 	"Works": [
 		{
+			"Title": "Stylised Flashstep",
+			"Category": "SFX",
+			"Game": "",
+			"Video": "media/Works/StylisedFlashstepSfx.mp4",
+			"Poster": "media/Works/StylisedFlashstepSfx.jpg",
+			"Note": "a snappy stylised flashstep.",
+			"Date": "2026-10-09"
+		},
+		{
+			"Title": "Jinwoo Awakening",
+			"Category": "SFX",
+			"Game": "",
+			"Video": "media/Works/JinwooAwakeningSfx.mp4",
+			"Poster": "media/Works/JinwooAwakeningSfx.jpg",
+			"Note": "build up and release for an awakening.",
+			"Date": "2026-10-05"
+		},
+		{
+			"Title": "Kehren",
+			"Category": "SFX",
+			"Game": "",
+			"Video": "media/Works/KehrenSfx.mp4",
+			"Poster": "media/Works/KehrenSfx.jpg",
+			"Note": "impact and burst sounds for a skill.",
+			"Date": "2026-10-04"
+		},
+		{
+			"Title": "Inferno Beatdown",
+			"Category": "SFX",
+			"Game": "",
+			"Video": "media/Works/InfernoBeatdownSfx.mp4",
+			"Poster": "media/Works/InfernoBeatdownSfx.jpg",
+			"Note": "fire and energy hits for a beatdown combo.",
+			"Date": "2026-10-04"
+		},
+		{
 			"Title": "Hachi Cleave",
 			"Category": "SFX",
 			"Game": "",
@@ -101,11 +137,11 @@
 		},
 		{
 			"Title": "Energy Punch Combo",
-			"Category": "Scripting",
+			"Category": "SFX",
 			"Game": "",
 			"Video": "media/Works/EnergyPunchCombo.mp4",
 			"Poster": "media/Works/EnergyPunchCombo.jpg",
-			"Note": "combo chain with hit confirms.",
+			"Note": "punches, energy hits and a finisher.",
 			"Date": "2026-10-03"
 		},
 		{

@@ -19,6 +19,10 @@ TrackRate=128k
 Clips=(
 	"Local/AizenModePopSfx.mp4|AizenModePopSfx|Sfx"
 	"Local/HachiCleaveSfx.mp4|HachiCleaveSfx|Sfx"
+	"Local/StylisedFlashstepSfx.mp4|StylisedFlashstepSfx|Sfx"
+	"Local/JinwooAwakeningSfx.mp4|JinwooAwakeningSfx|Sfx"
+	"Local/KehrenSfx.mp4|KehrenSfx|Sfx"
+	"Local/InfernoBeatdownSfx.mp4|InfernoBeatdownSfx|Sfx"
 	"Roport/GojoCutsceneSfx.mp4|GojoCutsceneSfx|Sfx"
 	"Roport/WukongCutsceneSfx.mp4|WukongCutsceneSfx|Sfx"
 	"Roport/FireSamuraiCutsceneSfx.mp4|FireSamuraiCutsceneSfx|Sfx"
@@ -28,7 +32,7 @@ Clips=(
 	"Roport/CutsceneVfx.mp4|CutsceneVfx|Other"
 	"Roport/ChainedTogether.mp4|ChainedTogether|Other"
 	"Roport/DualDestruction.mp4|DualDestruction|Other"
-	"Roport/EnergyPunchCombo.mp4|EnergyPunchCombo|Other"
+	"Roport/EnergyPunchCombo.mp4|EnergyPunchCombo|Sfx"
 )
 
 Games=(TypeSoul BladesOfChance BratDuels Veyth Vania SteelVelocity Seraphs MultiMayhem)

@@ -125,16 +125,16 @@ test.describe("player", function () {
 test.describe("works", function () {
 	test("tabs filter the clips", async function ({ page }) {
 		await OpenScreen(page, "Works")
-		await expect(page.locator(".WorkTile")).toHaveCount(13)
+		await expect(page.locator(".WorkTile")).toHaveCount(17)
 		await page.locator(".Tab", { hasText: "SFX" }).click()
-		await expect(page.locator(".WorkTile")).toHaveCount(7)
+		await expect(page.locator(".WorkTile")).toHaveCount(12)
 	})
 
 	test("the viewer opens a clip and escape closes it before leaving", async function ({ page }) {
 		await OpenScreen(page, "Works")
 		await page.locator(".WorkTile").first().click()
 		await expect(page.locator(".Viewer")).toBeVisible()
-		await expect(page.locator(".ViewerTitle")).toHaveText("Hachi Cleave")
+		await expect(page.locator(".ViewerTitle")).toHaveText("Stylised Flashstep")
 		await expect(page.locator(".ViewerMedia video")).toHaveAttribute("src", /HachiCleaveSfx\.mp4$/)
 		await page.keyboard.press("Escape")
 		await expect(page.locator(".Viewer")).toBeHidden()
