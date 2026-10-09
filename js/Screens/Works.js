@@ -79,6 +79,11 @@ function PickTab(Index) {
 	RenderGrid()
 }
 
+function ChooseTab(Index) {
+	PickTab(Index)
+	Context.Sounds.Tab()
+}
+
 function BuildViewer() {
 	const Overlay = Create("div", "Viewer")
 	Overlay.hidden = true
@@ -155,8 +160,8 @@ const KeyHandlers = {
 	ArrowRight: function () { MoveFocus(1) },
 	ArrowUp: function () { MoveFocus(-ColumnCount()) },
 	ArrowDown: function () { MoveFocus(ColumnCount()) },
-	q: function () { PickTab(ActiveTab - 1) },
-	e: function () { PickTab(ActiveTab + 1) },
+	q: function () { ChooseTab(ActiveTab - 1) },
+	e: function () { ChooseTab(ActiveTab + 1) },
 }
 
 export const Name = "Works"
@@ -164,7 +169,7 @@ export const Name = "Works"
 export function Mount(Root, SharedContext) {
 	Context = SharedContext
 	const Body = BuildPage(Root, "Works", "CLIPS AND BREAKDOWNS")
-	Tabs = BuildTabs(TabLabels, PickTab)
+	Tabs = BuildTabs(TabLabels, ChooseTab)
 	Grid = Create("div", "WorkGrid")
 	Viewer = BuildViewer()
 

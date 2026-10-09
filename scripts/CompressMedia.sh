@@ -14,6 +14,19 @@ SfxAudioRate=160k
 OtherAudioRate=128k
 ImageQuality=3
 TrackRate=128k
+UiRate=128k
+UiPeakDb=-3
+UiFadeIn=0.006
+UiFadeOut=0.03
+
+UiSounds=(
+	"Move|0|0.083"
+	"Tab|0|0.081"
+	"Select|0|0.7"
+	"Back|0.1|0.12"
+	"Start|0|0.9"
+	"Wipe|0|0.638"
+)
 
 Clips=(
 	"Local/AizenModePopSfx.mp4|AizenModePopSfx|Sfx"
@@ -61,3 +74,24 @@ done
 
 ffmpeg -y -v error -i "$SourceRoot/Local/BetterDays.mp3" -map 0:a -c:a libmp3lame -b:a "$TrackRate" \
 	"$AudioOut/BetterDays.mp3"
+
+mkdir -p "$AudioOut/Ui"
+
+for Entry in "${UiSounds[@]}"; do
+	IFS="|" read -r Name TrimStart Length <<< "$Entry"
+	Input="$SourceRoot/UiSounds/$Name.wav"
+	FadeOutStart=$(awk "BEGIN { print $Length - $UiFadeOut }")
+	Filters="atrim=$TrimStart:$(awk "BEGIN { print $TrimStart + $Length }"),asetpts=PTS-STARTPTS"
+	if [ "$TrimStart" != "0" ]; then
+		Filters="$Filters,afade=t=in:d=$UiFadeIn"
+	fi
+	Filters="$Filters,afade=t=out:st=$FadeOutStart:d=$UiFadeOut,aformat=channel_layouts=mono"
+	Staged="$(mktemp --suffix=.wav)"
+	ffmpeg -y -v error -i "$Input" -vn -af "$Filters" -ar 44100 -c:a pcm_f32le "$Staged"
+	PeakDb=$(ffmpeg -v info -i "$Staged" -af "astats=measure_perchannel=none:measure_overall=Peak_level" -f null - 2>&1 \
+		| sed -n 's/.*Peak level dB: \(-\{0,1\}[0-9.]*\).*/\1/p')
+	Gain=$(awk "BEGIN { print $UiPeakDb - $PeakDb }")
+	ffmpeg -y -v error -i "$Staged" -af "volume=${Gain}dB" -map_metadata -1 -c:a libmp3lame -b:a "$UiRate" \
+		"$AudioOut/Ui/$Name.mp3"
+	rm -f "$Staged"
+done

@@ -114,14 +114,14 @@ function PickTab(Index) {
 	Content.replaceChildren(...TabBuilders[ActiveTab]())
 }
 
-function StepTab(Step) {
-	PickTab(ActiveTab + Step)
-	Context.Sounds.Move()
+function ChooseTab(Index) {
+	PickTab(Index)
+	Context.Sounds.Tab()
 }
 
 const KeyHandlers = {
-	ArrowLeft: function () { StepTab(-1) },
-	ArrowRight: function () { StepTab(1) },
+	ArrowLeft: function () { ChooseTab(ActiveTab - 1) },
+	ArrowRight: function () { ChooseTab(ActiveTab + 1) },
 }
 
 export const Name = "Commissions"
@@ -129,7 +129,7 @@ export const Name = "Commissions"
 export function Mount(Root, SharedContext) {
 	Context = SharedContext
 	const Body = BuildPage(Root, "Commissions", "DM FOR INQUIRIES")
-	Tabs = BuildTabs(TabLabels, PickTab)
+	Tabs = BuildTabs(TabLabels, ChooseTab)
 	Content = Create("div", "CommissionContent")
 	Body.appendChild(Tabs.Row)
 	Body.appendChild(Content)

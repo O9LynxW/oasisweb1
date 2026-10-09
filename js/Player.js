@@ -2,13 +2,17 @@ import { Create } from "./Dom.js"
 
 const VolumeKey = "OasisVolume"
 const DefaultVolume = 0.35
-const BlipVolume = 0.12
+const UiVolume = 0.9
+const UiFolder = "media/Audio/Ui/"
 const PlayIcon = "<svg viewBox=\"0 0 12 14\" aria-hidden=\"true\"><path d=\"M0 0l12 7-12 7z\"/></svg>"
 const PauseIcon = "<svg viewBox=\"0 0 12 14\" aria-hidden=\"true\"><path d=\"M0 0h4v14H0zM8 0h4v14H8z\"/></svg>"
-const Blips = {
-	Move: { From: 900, To: 1300, Seconds: 0.045, Gain: 0.5 },
-	Select: { From: 640, To: 1700, Seconds: 0.09, Gain: 0.7 },
-	Back: { From: 1000, To: 420, Seconds: 0.07, Gain: 0.6 },
+const UiSounds = {
+	Move: 0.45,
+	Tab: 0.4,
+	Select: 0.6,
+	Back: 0.55,
+	Start: 0.75,
+	Wipe: 0.3,
 }
 
 function ReadVolume() {
@@ -27,6 +31,30 @@ function SaveVolume(Volume) {
 	} catch {
 		return
 	}
+}
+
+function FetchSamples() {
+	const Names = Object.keys(UiSounds)
+	return Promise.all(Names.map(function (Name) {
+		return fetch(UiFolder + Name + ".mp3")
+			.then(function (Response) { return Response.ok ? Response.arrayBuffer() : null })
+			.catch(function () { return null })
+	})).then(function (Buffers) {
+		const ByName = {}
+		Names.forEach(function (Name, Index) { ByName[Name] = Buffers[Index] })
+		return ByName
+	})
+}
+
+function DecodeSamples(AudioContextInstance, RawByName) {
+	const Names = Object.keys(RawByName).filter(function (Name) { return RawByName[Name] })
+	return Promise.all(Names.map(function (Name) {
+		return AudioContextInstance.decodeAudioData(RawByName[Name]).catch(function () { return null })
+	})).then(function (Decoded) {
+		const ByName = {}
+		Names.forEach(function (Name, Index) { ByName[Name] = Decoded[Index] })
+		return ByName
+	})
 }
 
 function BuildWidget(Root, Track, Volume) {
@@ -48,7 +76,7 @@ function BuildWidget(Root, Track, Volume) {
 	Range.min = "0"
 	Range.max = "100"
 	Range.value = String(Math.round(Volume * 100))
-	Range.setAttribute("aria-label", "music volume")
+	Range.setAttribute("aria-label", "volume")
 
 	Root.appendChild(Toggle)
 	Root.appendChild(Info)
@@ -57,95 +85,103 @@ function BuildWidget(Root, Track, Volume) {
 }
 
 export function CreateSounds(Track, Root) {
+	const RawSamples = FetchSamples()
 	let Volume = ReadVolume()
-	let Context = null
+	let SoundOn = true
 	let Ducked = false
 	let Unlocked = false
+	let AudioContextInstance = null
+	let Samples = {}
+	let SamplesReady = Promise.resolve()
+	let Music = null
 
-	if (!Track.File) {
-		Root.hidden = true
-		return { Unlock: function () {}, Move: function () {}, Select: function () {}, Back: function () {},
-			Duck: function () {}, Unduck: function () {}, IsMuted: function () { return true } }
+	function PlaySample(Name) {
+		const SampleBuffer = Samples[Name]
+		if (!SoundOn || !AudioContextInstance || !SampleBuffer) return
+
+		const Source = AudioContextInstance.createBufferSource()
+		const Gain = AudioContextInstance.createGain()
+		Source.buffer = SampleBuffer
+		Gain.gain.value = UiSounds[Name] * UiVolume * Volume
+		Source.connect(Gain)
+		Gain.connect(AudioContextInstance.destination)
+		Source.start()
 	}
 
-	const Music = new Audio(Track.File)
-	Music.loop = true
-	Music.preload = "none"
-	Music.volume = Volume
-	const Widget = BuildWidget(Root, Track, Volume)
-
-	function Play() {
-		Music.play().catch(function () { return })
+	function PlayMusic() {
+		if (Music) Music.play().catch(function () { return })
 	}
 
-	function PlayBlip(Name) {
-		if (!Context || Music.paused) return
-		const Blip = Blips[Name]
-		const Now = Context.currentTime
-		const Oscillator = Context.createOscillator()
-		const Gain = Context.createGain()
-
-		Oscillator.type = "sine"
-		Oscillator.frequency.setValueAtTime(Blip.From, Now)
-		Oscillator.frequency.exponentialRampToValueAtTime(Blip.To, Now + Blip.Seconds)
-		Gain.gain.setValueAtTime(Blip.Gain * BlipVolume * Volume, Now)
-		Gain.gain.exponentialRampToValueAtTime(0.0001, Now + Blip.Seconds)
-		Oscillator.connect(Gain)
-		Gain.connect(Context.destination)
-		Oscillator.start(Now)
-		Oscillator.stop(Now + Blip.Seconds + 0.02)
-	}
-
-	Widget.Toggle.addEventListener("click", function () {
-		Ducked = false
-		if (Music.paused) Play()
-		else Music.pause()
-	})
-	function ShowPaused() {
-		Widget.Toggle.innerHTML = PlayIcon
-		Widget.Toggle.setAttribute("aria-label", "play music")
-		Root.classList.remove("Playing")
-	}
-
-	Music.addEventListener("playing", function () {
-		Widget.Toggle.innerHTML = PauseIcon
-		Widget.Toggle.setAttribute("aria-label", "pause music")
-		Root.classList.add("Playing")
-	})
-	Music.addEventListener("pause", ShowPaused)
-	Music.addEventListener("error", ShowPaused)
-	Music.addEventListener("timeupdate", function () {
-		const Progress = Music.duration > 0 ? Music.currentTime / Music.duration : 0
-		Widget.Fill.style.transform = "scaleX(" + Progress + ")"
-	})
-	Widget.Range.addEventListener("input", function () {
-		const Level = Number(Widget.Range.value) / 100
-		Volume = Number.isFinite(Level) ? Level : 0
+	if (Track.File) {
+		Music = new Audio(Track.File)
+		Music.loop = true
+		Music.preload = "none"
 		Music.volume = Volume
-		SaveVolume(Volume)
-	})
+		const Widget = BuildWidget(Root, Track, Volume)
+
+		function ShowPaused() {
+			Widget.Toggle.innerHTML = PlayIcon
+			Widget.Toggle.setAttribute("aria-label", "play music")
+			Root.classList.remove("Playing")
+		}
+
+		Widget.Toggle.addEventListener("click", function () {
+			Ducked = false
+			SoundOn = Music.paused
+			if (SoundOn) PlayMusic()
+			else Music.pause()
+		})
+		Music.addEventListener("playing", function () {
+			Widget.Toggle.innerHTML = PauseIcon
+			Widget.Toggle.setAttribute("aria-label", "pause music")
+			Root.classList.add("Playing")
+		})
+		Music.addEventListener("pause", ShowPaused)
+		Music.addEventListener("error", ShowPaused)
+		Music.addEventListener("timeupdate", function () {
+			const Progress = Music.duration > 0 ? Music.currentTime / Music.duration : 0
+			Widget.Fill.style.transform = "scaleX(" + Progress + ")"
+		})
+		Widget.Range.addEventListener("input", function () {
+			const Level = Number(Widget.Range.value) / 100
+			Volume = Number.isFinite(Level) ? Level : 0
+			Music.volume = Volume
+			SaveVolume(Volume)
+		})
+	} else {
+		Root.hidden = true
+	}
 
 	return {
 		Unlock: function () {
 			if (Unlocked) return
 			Unlocked = true
 			const AudioContextClass = window.AudioContext || window.webkitAudioContext
-			if (AudioContextClass) Context = new AudioContextClass()
-			Play()
+			if (AudioContextClass) {
+				AudioContextInstance = new AudioContextClass()
+				SamplesReady = RawSamples
+					.then(function (RawByName) { return DecodeSamples(AudioContextInstance, RawByName) })
+					.then(function (Decoded) { Samples = Decoded })
+			}
+			PlayMusic()
 		},
-		Move: function () { PlayBlip("Move") },
-		Select: function () { PlayBlip("Select") },
-		Back: function () { PlayBlip("Back") },
+		Move: function () { PlaySample("Move") },
+		Tab: function () { PlaySample("Tab") },
+		Select: function () { PlaySample("Select") },
+		Back: function () { PlaySample("Back") },
+		Wipe: function () { PlaySample("Wipe") },
+		Start: function () {
+			SamplesReady.then(function () { PlaySample("Start") })
+		},
 		Duck: function () {
-			if (Music.paused) return
+			if (!Music || Music.paused) return
 			Ducked = true
 			Music.pause()
 		},
 		Unduck: function () {
 			if (!Ducked) return
 			Ducked = false
-			Play()
+			PlayMusic()
 		},
-		IsMuted: function () { return Music.paused },
 	}
 }

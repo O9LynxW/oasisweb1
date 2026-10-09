@@ -114,6 +114,23 @@ test.describe("player", function () {
 		await expect(page.locator(".PlayerToggle")).toHaveAttribute("aria-label", "play music")
 	})
 
+	test("all six menu sounds load", async function ({ page }) {
+		const Loaded = []
+		page.on("response", function (Response) {
+			if (Response.url().includes("/media/Audio/Ui/") && Response.ok()) Loaded.push(Response.url())
+		})
+		await EnterMenu(page)
+		await expect.poll(function () { return Loaded.length }).toBe(6)
+	})
+
+	test("link previews point at the preview card", async function ({ page }) {
+		await page.goto("/")
+		await expect(page.locator("meta[property='og:image']")).toHaveAttribute("content", "https://oasislua.site/media/Preview.jpg")
+		await expect(page.locator("meta[name='twitter:card']")).toHaveAttribute("content", "summary_large_image")
+		const Preview = await page.request.get("/media/Preview.jpg")
+		expect(Preview.ok()).toBe(true)
+	})
+
 	test("volume is remembered", async function ({ page }) {
 		await EnterMenu(page)
 		await page.locator(".PlayerVolume").fill("80")

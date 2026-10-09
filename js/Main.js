@@ -53,6 +53,7 @@ function StartTitle(Router, Sounds) {
 	function Dismiss() {
 		if (Title.hidden || Router.IsTransitioning()) return
 		UnlockOnce()
+		Sounds.Start()
 		Router.Wipe(function () {
 			Title.hidden = true
 			Router.ShowNow("Main")

@@ -49,6 +49,7 @@ export function StartRouter(Screens, Elements, Sounds) {
 
 	function Wipe(OnMiddle) {
 		Transitioning = true
+		Sounds.Wipe()
 		WipeCount += 1
 		const ThisWipe = WipeCount
 		Elements.Wipe.classList.remove("Run")
