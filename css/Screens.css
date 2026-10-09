@@ -1,0 +1,107 @@
+.WorkGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;max-width:1280px}
+.WorkTile{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--Navy);clip-path:polygon(0 0,100% 0,95% 100%,0 100%);border-bottom:4px solid transparent;transition:transform .2s var(--Snap),border-color .15s ease}
+.WorkTile:hover,.WorkTile:focus-visible{transform:translateY(-4px);border-bottom-color:var(--Cyan);outline:none}
+.WorkPoster,.WorkPreview{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.WorkPreview{opacity:0;transition:opacity .2s ease}
+.WorkTile:hover .WorkPreview{opacity:1}
+.WorkCaption{position:absolute;left:0;right:0;bottom:0;padding:26px 16px 10px;display:flex;flex-direction:column;background:linear-gradient(transparent,rgba(4,13,43,.92));font-family:var(--Display);line-height:1.05}
+.WorkCaption small{font-weight:700;font-size:11px;letter-spacing:.24em;color:var(--Cyan)}
+.WorkCaption b{font-weight:800;font-style:italic;font-size:22px;text-transform:uppercase}
+
+.Viewer{position:fixed;inset:0;z-index:15;background:rgba(4,13,43,.96);display:flex;align-items:center;justify-content:center;padding:90px 5vw 40px}
+.ViewerPanel{display:grid;grid-template-columns:minmax(0,3fr) minmax(220px,1fr);gap:28px;width:min(1280px,100%);align-items:end;animation:SlideIn .35s var(--Snap) both}
+.ViewerMedia video,.ViewerMedia img{width:100%;max-height:72vh;background:#000;object-fit:contain}
+.ViewerMedia{border-bottom:6px solid var(--Cyan)}
+.ViewerInfo{font-family:var(--Display);padding-bottom:6px}
+.ViewerMeta{display:block;font-weight:700;letter-spacing:.24em;color:var(--Cyan);font-size:13px}
+.ViewerTitle{font-weight:900;font-style:italic;font-size:clamp(34px,4vw,56px);line-height:.9;text-transform:uppercase;margin-top:8px}
+.ViewerNote{font-family:var(--Body);color:var(--Ice);margin-top:12px;line-height:1.55}
+.ViewerClose{display:inline-block;margin-top:22px;font-family:var(--Display);font-weight:800;font-style:italic;font-size:20px;letter-spacing:.1em;background:var(--White);color:var(--Deep);padding:2px 20px;clip-path:var(--Slant)}
+.ViewerClose:hover{background:var(--Cyan)}
+
+.Games{display:grid;grid-template-columns:minmax(220px,320px) minmax(0,1fr);gap:4vw;max-width:1280px}
+.GameList{display:flex;flex-direction:column;gap:4px}
+.GameItem{position:relative;font-family:var(--Display);font-weight:800;font-style:italic;font-size:28px;text-transform:uppercase;padding:2px 18px;color:rgba(207,228,255,.6);isolation:isolate;transition:color .15s ease,transform .2s var(--Snap)}
+.GameItem.Active{color:var(--Deep);transform:translateX(12px)}
+.GameItem.Active::before{content:"";position:absolute;inset:0;background:var(--White);clip-path:var(--Slant);z-index:-1}
+.GamePanel{max-width:560px}
+.GamePanel.Swap{animation:SlideIn .35s var(--Snap) both}
+.GameThumb{aspect-ratio:16/9;background:var(--Navy);clip-path:polygon(0 0,100% 0,96% 100%,0 100%);border-bottom:6px solid var(--Cyan);overflow:hidden}
+.GameThumb img{width:100%;height:100%;object-fit:cover}
+.GameRole{font-family:var(--Display);font-weight:700;letter-spacing:.24em;color:var(--Cyan);margin-top:18px;font-size:15px}
+.GameBlurb{color:var(--Ice);margin-top:8px;max-width:540px;line-height:1.6}
+.GameActions{display:flex;align-items:flex-end;flex-wrap:wrap;gap:16px clamp(18px,3vw,40px);margin-top:18px}
+.GameStats{display:flex;gap:clamp(18px,3vw,40px);font-family:var(--Display)}
+.GameStat b{display:block;font-weight:800;font-style:italic;font-size:34px;line-height:1}
+.GameStat small{font-weight:700;font-size:11px;letter-spacing:.24em;color:var(--Ice)}
+.GameTag{display:inline-block;font-family:var(--Display);font-weight:800;font-style:italic;letter-spacing:.14em;padding:2px 16px;border:2px solid var(--Cyan);color:var(--Cyan);transform:skewX(-12deg)}
+.GamePlay{display:inline-block;font-family:var(--Display);font-weight:900;font-style:italic;font-size:26px;letter-spacing:.08em;background:var(--White);color:var(--Deep);padding:0 30px;clip-path:var(--Slant);transition:background .15s ease}
+.GamePlay:hover{background:var(--Cyan)}
+
+.CommissionContent{max-width:1100px}
+.Job{background:rgba(4,13,43,.55);border-left:6px solid var(--Cyan);padding:18px 22px;margin-bottom:14px;max-width:760px}
+.JobTop{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.JobTitle{font-family:var(--Display);font-weight:800;font-style:italic;font-size:28px;text-transform:uppercase;line-height:1}
+.JobClient{color:var(--Ice);font-size:13px}
+.JobPill{font-family:var(--Display);font-weight:800;font-size:13px;letter-spacing:.16em;padding:2px 14px;transform:skewX(-12deg);background:rgba(255,255,255,.1)}
+.JobPill.Active{background:var(--Cyan);color:var(--Deep)}
+.JobPill.Done{background:var(--Green);color:var(--Deep)}
+.JobPill.Queued{background:var(--Amber);color:var(--Deep)}
+.JobBar{height:5px;background:rgba(207,228,255,.15);margin:14px 0;overflow:hidden}
+.JobFill{display:block;height:100%;background:var(--Cyan);transform-origin:left}
+.JobTasks{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.JobTasks li{position:relative;padding-left:20px;color:var(--Ice);font-size:14px}
+.JobTasks li::before{content:"";position:absolute;left:2px;top:.55em;width:8px;height:8px;border:1px solid var(--Ice);transform:rotate(45deg)}
+.JobTasks li.Complete{color:var(--Green);text-decoration:line-through;text-decoration-color:rgba(93,255,155,.5)}
+.JobTasks li.Complete::before{background:var(--Green);border-color:var(--Green)}
+.JobFoot{display:flex;justify-content:space-between;gap:12px;border-top:1px solid rgba(207,228,255,.2);padding-top:10px;font-size:13px;color:var(--Ice)}
+.JobFoot b{font-family:var(--Display);font-weight:800;color:var(--White);font-size:16px}
+
+.Quote{max-width:760px;color:var(--Ice);line-height:1.6;border-left:6px solid var(--White);padding:6px 0 6px 20px;margin-bottom:30px}
+.Quote b{color:var(--White)}
+.RateGroup{margin-bottom:34px}
+.RateHead{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;margin-bottom:14px;font-family:var(--Display)}
+.RateHead h3{font-weight:900;font-style:italic;font-size:34px}
+.RateHead span{color:var(--Ice);font-size:14px;letter-spacing:.06em}
+.Tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.Tier{background:rgba(4,13,43,.55);border-left:6px solid var(--Cyan);padding:16px 20px}
+.Tier h4{font-family:var(--Display);font-weight:800;font-style:italic;font-size:26px;text-transform:uppercase;line-height:1}
+.Tier small{display:block;font-family:var(--Display);font-weight:700;letter-spacing:.2em;color:var(--Cyan);margin:6px 0 8px;font-size:12px}
+.Tier p{color:var(--Ice);font-size:14px;line-height:1.5;margin-bottom:10px}
+.Tier ul{list-style:none;display:flex;flex-direction:column;gap:4px}
+.Tier li{position:relative;padding-left:16px;font-size:13px;color:var(--Ice)}
+.Tier li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;background:var(--Cyan);transform:rotate(45deg)}
+
+.Terms{list-style:none;counter-reset:Term;display:flex;flex-direction:column;gap:10px;max-width:760px}
+.Terms li{counter-increment:Term;display:flex;gap:18px;align-items:baseline;color:var(--Ice);line-height:1.5;background:rgba(4,13,43,.45);padding:10px 18px}
+.Terms li::before{content:counter(Term,decimal-leading-zero);font-family:var(--Display);font-weight:900;font-style:italic;font-size:24px;color:var(--Cyan);flex-shrink:0}
+
+.Posts{display:flex;flex-direction:column;gap:12px;max-width:760px}
+.Post{display:flex;gap:22px;align-items:baseline;background:rgba(4,13,43,.5);padding:14px 20px;border-left:6px solid var(--Cyan)}
+a.Post:hover{background:rgba(4,13,43,.75);border-left-color:var(--White)}
+.PostDate{font-family:var(--Display);font-weight:900;font-style:italic;font-size:30px;color:var(--Cyan);flex-shrink:0}
+.PostText h3{font-family:var(--Display);font-weight:800;font-style:italic;font-size:24px;text-transform:uppercase;line-height:1.05}
+.PostText p{color:var(--Ice);margin-top:4px;line-height:1.5}
+
+.Links{display:flex;flex-direction:column;gap:8px;max-width:560px}
+.LinkRow{position:relative;display:flex;justify-content:space-between;align-items:baseline;font-family:var(--Display);font-weight:800;font-style:italic;font-size:clamp(32px,4vw,44px);text-transform:uppercase;padding:0 22px;isolation:isolate;transition:color .15s ease,transform .2s var(--Snap)}
+.LinkRow small{font-size:14px;letter-spacing:.2em;font-style:normal;color:var(--Cyan)}
+.LinkRow::before{content:"";position:absolute;inset:0;background:var(--White);clip-path:var(--Slant);transform:scaleX(0);transform-origin:left;transition:transform .2s var(--Snap);z-index:-1}
+.LinkRow:hover,.LinkRow:focus-visible{color:var(--Deep);transform:translateX(12px);outline:none}
+.LinkRow:hover::before,.LinkRow:focus-visible::before{transform:scaleX(1)}
+.LinkRow:hover small,.LinkRow:focus-visible small{color:var(--Blue)}
+
+@media(max-width:900px){
+	.Games{grid-template-columns:1fr;gap:20px}
+	.GameList{flex-direction:row;flex-wrap:wrap}
+	.GameItem{font-size:20px;padding:2px 14px}
+	.ViewerPanel{grid-template-columns:1fr;gap:16px}
+}
+
+@media(max-width:760px){
+	.WorkGrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+	.WorkCaption b{font-size:17px}
+	.Viewer{padding:76px 16px 24px}
+	.GameStat b{font-size:26px}
+	.Post{flex-direction:column;gap:4px}
+}

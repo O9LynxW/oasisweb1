@@ -1,0 +1,114 @@
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+	--Deep:#040d2b;
+	--Navy:#0a2466;
+	--Blue:#1452c8;
+	--Cyan:#7fe8ff;
+	--Ice:#cfe4ff;
+	--White:#ffffff;
+	--Green:#5dff9b;
+	--Amber:#ffc65d;
+	--Red:#ff6b7f;
+	--Snap:cubic-bezier(.7,0,.2,1);
+	--Display:"Saira Condensed",sans-serif;
+	--Body:"Saira",sans-serif;
+	--Gutter:6vw;
+	--Slant:polygon(0 0,100% 0,94% 100%,0 100%);
+}
+
+html,body{height:100%;overflow:hidden}
+body{background:var(--Deep);color:var(--White);font-family:var(--Body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;text-align:left}
+img,video{display:block;max-width:100%}
+::selection{background:var(--Cyan);color:var(--Deep)}
+:focus-visible{outline:3px solid var(--Cyan);outline-offset:3px}
+[hidden]{display:none!important}
+
+.Backdrop{position:fixed;inset:0;background:linear-gradient(140deg,var(--Deep) 0%,var(--Navy) 45%,var(--Blue) 100%);overflow:hidden}
+.Caustic{position:absolute;inset:-20%;background:
+	radial-gradient(ellipse 30% 18% at 30% 40%,rgba(127,232,255,.10),transparent 70%),
+	radial-gradient(ellipse 22% 14% at 70% 65%,rgba(127,232,255,.08),transparent 70%),
+	radial-gradient(ellipse 26% 10% at 55% 25%,rgba(255,255,255,.06),transparent 70%);
+	animation:Drift 16s ease-in-out infinite alternate}
+@keyframes Drift{to{transform:translate(4%,-3%) rotate(3deg)}}
+.Streak{position:absolute;left:-20%;width:140%;height:90px;background:linear-gradient(90deg,transparent,rgba(127,232,255,.2),rgba(255,255,255,.1),transparent);transform:rotate(-16deg);animation:Sweep 9s linear infinite}
+.StreakTwo{height:30px;animation-duration:13s;animation-delay:-5s;opacity:.7}
+@keyframes Sweep{from{top:110%}to{top:-20%}}
+
+.Hud{position:fixed;top:22px;left:28px;z-index:5;font-family:var(--Display);line-height:1;pointer-events:none}
+.HudDate{font-weight:800;font-style:italic;font-size:40px}
+.HudDate span{font-size:22px;color:var(--Cyan);margin-left:6px}
+.HudTime{font-weight:700;font-style:italic;font-size:17px;letter-spacing:.2em;color:var(--Ice);margin-top:2px}
+
+.Presence{position:fixed;top:22px;right:28px;z-index:6;display:flex;align-items:center;gap:10px;font-family:var(--Display);line-height:1.1}
+.PresenceAvatar{width:38px;height:38px;object-fit:cover;clip-path:polygon(12% 0,100% 0,88% 100%,0 100%)}
+.PresenceText{display:flex;flex-direction:column;align-items:flex-end}
+.PresenceName{font-weight:800;font-style:italic;font-size:18px;letter-spacing:.04em}
+.PresenceStatus{display:flex;align-items:center;gap:7px;font-weight:700;font-size:12px;letter-spacing:.2em;color:var(--Ice)}
+.PresenceDot{width:8px;height:8px;background:var(--Green);transform:rotate(45deg);box-shadow:0 0 10px var(--Green)}
+.PresenceDot.Idle{background:var(--Amber);box-shadow:0 0 10px var(--Amber)}
+.PresenceDot.Dnd{background:var(--Red);box-shadow:0 0 10px var(--Red)}
+.PresenceDot.Offline{background:#7d8aa6;box-shadow:none}
+.Presence:hover .PresenceName{color:var(--Cyan)}
+
+.Title{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer}
+.TitleName{font-family:var(--Display);font-weight:900;font-style:italic;font-size:clamp(96px,20vw,260px);line-height:.8;text-shadow:8px 8px 0 var(--Deep);transform:rotate(-4deg)}
+.TitleRole{font-family:var(--Display);font-weight:700;letter-spacing:.4em;color:var(--Cyan);margin-top:22px;font-size:clamp(13px,1.6vw,18px)}
+.TitlePrompt{visibility:hidden;margin-top:9vh;font-family:var(--Display);font-weight:800;font-style:italic;font-size:clamp(18px,2.2vw,26px);letter-spacing:.14em;padding:4px 26px;background:var(--White);color:var(--Deep);clip-path:var(--Slant);animation:Blink 1.6s ease-in-out infinite}
+.Ready .TitlePrompt{visibility:visible}
+@keyframes Blink{50%{opacity:.35}}
+
+.Screen{position:fixed;inset:0;z-index:2;display:none}
+.Screen.Shown{display:block}
+
+.Page{position:absolute;inset:0;padding:118px var(--Gutter) 90px;display:flex;flex-direction:column}
+.PageTitle{font-family:var(--Display);font-weight:900;font-style:italic;font-size:clamp(56px,8.4vw,124px);line-height:.85;text-transform:uppercase;transform:rotate(-4deg);transform-origin:left;text-shadow:5px 5px 0 var(--Deep);flex-shrink:0}
+.PageTitle span{display:block;font-size:.19em;letter-spacing:.3em;color:var(--Cyan);text-shadow:none;margin-top:8px}
+.Screen.Shown .PageTitle{animation:PunchIn .45s var(--Snap) both}
+.Screen.Shown .PageBody{animation:SlideIn .5s var(--Snap) .08s both}
+@keyframes PunchIn{from{transform:rotate(-4deg) translateX(-60px) scale(1.15);opacity:0}}
+@keyframes SlideIn{from{transform:translateX(80px);opacity:0}}
+.PageBody{margin-top:36px;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:4px 16px 24px 4px;scrollbar-width:thin;scrollbar-color:var(--Cyan) transparent}
+
+.Tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:24px}
+.Tab{font-family:var(--Display);font-weight:800;font-style:italic;font-size:22px;padding:2px 20px;color:var(--Ice);background:rgba(255,255,255,.08);transform:skewX(-14deg);transition:background .15s ease,color .15s ease}
+.Tab:hover{background:rgba(255,255,255,.18)}
+.Tab.Active{background:var(--White);color:var(--Deep)}
+
+.Empty{font-family:var(--Display);font-weight:700;font-style:italic;font-size:22px;letter-spacing:.06em;color:var(--Ice);border-left:6px solid var(--Cyan);padding:10px 20px;max-width:560px;background:rgba(4,13,43,.45)}
+
+.BackButton{position:fixed;left:28px;bottom:22px;z-index:6;display:flex;align-items:center;gap:8px;font-family:var(--Display);font-weight:700;letter-spacing:.18em;font-size:14px;color:var(--Ice)}
+.BackButton b{background:var(--White);color:var(--Deep);padding:0 8px;transform:skewX(-12deg)}
+.BackButton:hover{color:var(--White)}
+
+.Wipe{position:fixed;inset:0;z-index:20;pointer-events:none}
+.WipeBar{position:absolute;top:-20%;bottom:-20%;width:140%;left:-150%;background:var(--White);transform:skewX(-18deg)}
+.WipeBarCyan{background:var(--Cyan)}
+.Wipe:not(.Run) .WipeBar{visibility:hidden}
+.Wipe.Run .WipeBar{animation:WipeAcross .6s var(--Snap) forwards}
+.Wipe.Run .WipeBarCyan{animation-delay:.05s}
+@keyframes WipeAcross{0%{left:-150%}45%{left:-20%}55%{left:-20%}100%{left:120%}}
+
+@media(max-width:760px){
+	:root{--Gutter:20px}
+	.Hud{top:16px;left:18px}
+	.HudDate{font-size:28px}
+	.HudDate span{font-size:16px}
+	.HudTime{font-size:13px}
+	.Presence{top:16px;right:18px}
+	.PresenceAvatar{width:30px;height:30px}
+	.PresenceName{font-size:15px}
+	.Page{padding:96px var(--Gutter) 120px}
+	.PageBody{margin-top:26px;padding-right:4px}
+	.Tab{font-size:18px;padding:2px 14px}
+	.BackButton{left:18px;bottom:86px;font-size:16px;background:var(--White);color:var(--Deep);padding:2px 18px;clip-path:var(--Slant)}
+	.BackButton b{display:none}
+	.Streak{animation-duration:14s}
+	.StreakTwo{display:none}
+}
+
+@media(prefers-reduced-motion:reduce){
+	*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+}

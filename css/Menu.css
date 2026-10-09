@@ -1,0 +1,33 @@
+.MainName{position:absolute;right:5vw;top:15vh;text-align:right;font-family:var(--Display)}
+.MainName h1{font-weight:900;font-style:italic;font-size:clamp(84px,15vw,220px);line-height:.8;text-shadow:6px 6px 0 var(--Deep)}
+.MainRole{font-weight:700;letter-spacing:.32em;color:var(--Cyan);font-size:clamp(13px,1.4vw,18px);margin-top:14px}
+
+.MainStats{display:flex;justify-content:flex-end;gap:clamp(18px,3vw,44px);margin-top:28px}
+.MainStat b{display:block;font-weight:800;font-style:italic;font-size:clamp(34px,4.2vw,58px);line-height:1}
+.MainStat small{display:block;font-weight:700;letter-spacing:.28em;color:var(--Ice);font-size:12px;margin-top:2px}
+.MainStat:first-child b{color:var(--White);text-shadow:4px 4px 0 var(--Deep)}
+.MainStat:not(:first-child) b{color:var(--Ice)}
+
+.Menu{position:absolute;left:0;bottom:11vh;display:flex;flex-direction:column;gap:2px;transform:rotate(-7deg);transform-origin:left bottom}
+.MenuItem{position:relative;display:block;font-family:var(--Display);font-weight:800;font-style:italic;font-size:clamp(36px,5vw,68px);line-height:1.05;text-transform:uppercase;padding:0 64px 0 var(--Gutter);color:rgba(207,228,255,.55);transition:color .15s ease,transform .25s var(--Snap);isolation:isolate}
+.MenuItem::before{content:"";position:absolute;inset:6% 0;background:var(--White);clip-path:var(--Slant);transform:scaleX(0);transform-origin:left;transition:transform .22s var(--Snap);z-index:-1}
+.MenuItem::after{content:"";position:absolute;left:0;right:22px;bottom:4%;height:8px;background:var(--Cyan);clip-path:polygon(0 0,100% 0,96% 100%,0 100%);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--Snap) .04s;z-index:-2}
+.MenuItem.Active{color:var(--Deep);transform:translateX(18px)}
+.MenuItem.Active::before,.MenuItem.Active::after{transform:scaleX(1)}
+.MenuItem:focus-visible{outline:none}
+.MenuItem small{font-size:.3em;letter-spacing:.2em;margin-left:14px;vertical-align:middle;opacity:0;transition:opacity .2s ease}
+.MenuItem.Active small{opacity:1}
+
+@media(max-width:760px){
+	.MainName{top:12vh;right:20px;left:20px}
+	.MainStats{gap:16px}
+	.MainStat small{font-size:10px;letter-spacing:.2em}
+	.Menu{bottom:15vh;transform:rotate(-5deg)}
+	.MenuItem{font-size:clamp(40px,11vw,56px);padding-right:44px}
+}
+
+@media(max-height:620px) and (min-width:761px){
+	.MainName{top:12vh}
+	.MainName h1{font-size:clamp(70px,11vw,150px)}
+	.MenuItem{font-size:clamp(30px,4vw,48px)}
+}
