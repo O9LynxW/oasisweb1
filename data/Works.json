@@ -1,0 +1,121 @@
+{
+	"Works": [
+		{
+			"Title": "Hachi Cleave",
+			"Category": "SFX",
+			"Game": "",
+			"Video": "media/Works/HachiCleaveSfx.mp4",
+			"Poster": "media/Works/HachiCleaveSfx.jpg",
+			"Note": "full sound design for a cleave skill.",
+			"Date": "2026-10-07"
+		},
+		{
+			"Title": "Gojo Cutscene",
+			"Category": "SFX",
+			"Game": "",
+			"Video": "media/Works/GojoCutsceneSfx.mp4",
+			"Poster": "media/Works/GojoCutsceneSfx.jpg",
+			"Note": "ambience and impacts scored to a cutscene.",
+			"Date": "2026-10-06"
+		},
+		{
+			"Title": "Aizen Mode Pop",
+			"Category": "SFX",
+			"Game": "",
+			"Video": "media/Works/AizenModePopSfx.mp4",
+			"Poster": "media/Works/AizenModePopSfx.jpg",
+			"Note": "build up and release for a mode transformation.",
+			"Date": "2026-10-01"
+		},
+		{
+			"Title": "Wukong Cutscene",
+			"Category": "SFX",
+			"Game": "",
+			"Video": "media/Works/WukongCutsceneSfx.mp4",
+			"Poster": "media/Works/WukongCutsceneSfx.jpg",
+			"Note": "ambience and impacts scored to a cutscene.",
+			"Date": "2026-10-01"
+		},
+		{
+			"Title": "Fire Samurai Cutscene",
+			"Category": "SFX",
+			"Game": "",
+			"Video": "media/Works/FireSamuraiCutsceneSfx.mp4",
+			"Poster": "media/Works/FireSamuraiCutsceneSfx.jpg",
+			"Note": "fire, steel and impacts scored to a cutscene.",
+			"Date": "2026-10-01"
+		},
+		{
+			"Title": "Kido",
+			"Category": "SFX",
+			"Game": "",
+			"Video": "media/Works/KidoSfx.mp4",
+			"Poster": "media/Works/KidoSfx.jpg",
+			"Note": "spell cast and impact sounds.",
+			"Date": "2026-10-03"
+		},
+		{
+			"Title": "Mystic / Light",
+			"Category": "SFX",
+			"Game": "",
+			"Video": "media/Works/MysticLightSfx.mp4",
+			"Poster": "media/Works/MysticLightSfx.jpg",
+			"Note": "light based weapon sounds.",
+			"Date": "2026-09-30"
+		},
+		{
+			"Title": "Accessory VFX",
+			"Category": "VFX",
+			"Game": "",
+			"Video": "media/Works/AccessoryVfx.mp4",
+			"Poster": "media/Works/AccessoryVfx.jpg",
+			"Note": "particle effects built to stay cheap on performance.",
+			"Date": "2026-09-27"
+		},
+		{
+			"Title": "Cutscene VFX",
+			"Category": "VFX",
+			"Game": "",
+			"Video": "media/Works/CutsceneVfx.mp4",
+			"Poster": "media/Works/CutsceneVfx.jpg",
+			"Note": "combat effects for a cutscene.",
+			"Date": "2026-09-30"
+		},
+		{
+			"Title": "Chained Together System",
+			"Category": "Scripting",
+			"Game": "",
+			"Video": "media/Works/ChainedTogether.mp4",
+			"Poster": "media/Works/ChainedTogether.jpg",
+			"Note": "players chained together with physics that hold up online.",
+			"Date": "2026-09-27"
+		},
+		{
+			"Title": "Dual Destruction",
+			"Category": "Scripting",
+			"Game": "",
+			"Video": "media/Works/DualDestruction.mp4",
+			"Poster": "media/Works/DualDestruction.jpg",
+			"Note": "a full skill, client and server.",
+			"Date": "2026-10-03"
+		},
+		{
+			"Title": "Energy Punch Combo",
+			"Category": "Scripting",
+			"Game": "",
+			"Video": "media/Works/EnergyPunchCombo.mp4",
+			"Poster": "media/Works/EnergyPunchCombo.jpg",
+			"Note": "combo chain with hit confirms.",
+			"Date": "2026-10-03"
+		},
+		{
+			"Title": "Interface",
+			"Category": "UI",
+			"Game": "",
+			"Video": null,
+			"Poster": "media/Works/Ui.jpg",
+			"Note": "designed and scripted ui.",
+			"Date": "2026-09-27"
+		}
+	]
+}

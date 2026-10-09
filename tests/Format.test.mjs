@@ -1,0 +1,31 @@
+import { test } from "node:test"
+import Assert from "node:assert/strict"
+import { FormatCount, TimeOfDay, FormatDate } from "../js/Format.js"
+
+test("FormatCount shortens large numbers", function () {
+	Assert.equal(FormatCount(818708614), "818.7M")
+	Assert.equal(FormatCount(833930183), "833.9M")
+	Assert.equal(FormatCount(555066), "555.1K")
+	Assert.equal(FormatCount(597), "597")
+	Assert.equal(FormatCount(1000), "1K")
+	Assert.equal(FormatCount(0), "0")
+})
+
+test("FormatCount shows a dash for bad values", function () {
+	Assert.equal(FormatCount(NaN), "-")
+	Assert.equal(FormatCount(undefined), "-")
+	Assert.equal(FormatCount("lots"), "-")
+})
+
+test("TimeOfDay names the part of the day", function () {
+	Assert.equal(TimeOfDay(5), "LATE NIGHT")
+	Assert.equal(TimeOfDay(9), "MORNING")
+	Assert.equal(TimeOfDay(14), "AFTERNOON")
+	Assert.equal(TimeOfDay(19), "EVENING")
+	Assert.equal(TimeOfDay(23), "NIGHT")
+})
+
+test("FormatDate gives month and day", function () {
+	Assert.equal(FormatDate("2026-10-09"), "10/09")
+	Assert.equal(FormatDate("nonsense"), "")
+})

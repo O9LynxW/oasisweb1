@@ -1,0 +1,76 @@
+{
+	"Games": [
+		{
+			"Name": "Type Soul",
+			"PlaceId": "14067600077",
+			"Role": "Skills / VFX / Optimisation",
+			"Blurb": "Bleach inspired combat game. Built a large number of skill frontends and backends, from hitboxes and replication through to the effects themselves.",
+			"Thumb": "media/Games/TypeSoul.jpg",
+			"Status": "Live",
+			"Order": 1
+		},
+		{
+			"Name": "Blades of Chance",
+			"PlaceId": "16349323749",
+			"Role": "Fullstack",
+			"Blurb": "An RNG game. Worked across the whole stack, from gameplay systems to the ui.",
+			"Thumb": "media/Games/BladesOfChance.jpg",
+			"Status": "Live",
+			"Order": 2
+		},
+		{
+			"Name": "Brat Duels",
+			"PlaceId": "101525526769912",
+			"Role": "Scripter",
+			"Blurb": "A duels game in beta. Scripted gameplay systems.",
+			"Thumb": "media/Games/BratDuels.jpg",
+			"Status": "Live",
+			"Order": 3
+		},
+		{
+			"Name": "VEYTH",
+			"PlaceId": null,
+			"Role": "Owner / Lead Developer",
+			"Blurb": "An original dark fantasy combat game. I own and lead it: combat, races, quests, ui and vfx.",
+			"Thumb": "media/Games/Veyth.jpg",
+			"Status": "InDevelopment",
+			"Order": 4
+		},
+		{
+			"Name": "Vania",
+			"PlaceId": null,
+			"Role": "Fullstack",
+			"Blurb": "A Castlevania inspired action game.",
+			"Thumb": "media/Games/Vania.jpg",
+			"Status": "InDevelopment",
+			"Order": 5
+		},
+		{
+			"Name": "Steel Velocity",
+			"PlaceId": null,
+			"Role": "VFX Artist / Scripter",
+			"Blurb": "A Steel Ball Run inspired JoJo pvp game.",
+			"Thumb": "media/Games/SteelVelocity.jpg",
+			"Status": "InDevelopment",
+			"Order": 6
+		},
+		{
+			"Name": "Seraphs",
+			"PlaceId": null,
+			"Role": "Developer",
+			"Blurb": "A Seraph of the End game.",
+			"Thumb": "media/Games/Seraphs.jpg",
+			"Status": "InDevelopment",
+			"Order": 7
+		},
+		{
+			"Name": "Multi Mayhem",
+			"PlaceId": null,
+			"Role": "Lead Developer / Owner",
+			"Blurb": "Battlegrounds style game. Combat mechanics, movesets, vfx and the direction of the game.",
+			"Thumb": "media/Games/MultiMayhem.jpg",
+			"Status": "InDevelopment",
+			"Order": 8
+		}
+	]
+}

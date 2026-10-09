@@ -1,0 +1,16 @@
+{
+	"DiscordUserId": "890630436840173579",
+	"Links": [
+		{ "Title": "Discord", "Subtitle": "DM ME", "Url": "https://discord.com/users/890630436840173579" },
+		{ "Title": "Server", "Subtitle": "PORTFOLIO", "Url": "" },
+		{ "Title": "Twitter", "Subtitle": "POSTS", "Url": "" },
+		{ "Title": "Roport", "Subtitle": "PROFILE", "Url": "https://roport.lol/Oasis_098" },
+		{ "Title": "Roblox", "Subtitle": "PROFILE", "Url": "" },
+		{ "Title": "YouTube", "Subtitle": "SHOWCASES", "Url": "" }
+	],
+	"Track": {
+		"Title": "Better Days",
+		"Artist": "NEIKED x Mae Muller x Polo G",
+		"File": "media/Audio/BetterDays.mp3"
+	}
+}
