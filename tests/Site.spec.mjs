@@ -185,14 +185,17 @@ test.describe("games", function () {
 })
 
 test.describe("commissions", function () {
-	test("board, rates and terms render", async function ({ page }) {
+	test("board, rates and payment render", async function ({ page }) {
 		await OpenScreen(page, "Commissions")
 		await expect(page.locator(".Job")).toHaveCount(1)
 		await expect(page.locator(".JobFoot")).toContainText("1 of 2 done")
 		await expect(page.locator(".JobPill")).toHaveText(/working on it/i)
 		await page.keyboard.press("ArrowRight")
-		await expect(page.locator(".Tier")).toHaveCount(7)
+		await expect(page.locator(".Tier")).toHaveCount(6)
+		await expect(page.locator(".TierPrice")).toHaveText(["$22", "$45", "$110", "$150", "$190", "$10"])
 		await page.keyboard.press("ArrowRight")
+		await expect(page.locator(".Currency")).toHaveCount(3)
+		await expect(page.locator(".PayPal")).toHaveAttribute("href", "https://paypal.me/oasis098")
 		await expect(page.locator(".Terms li")).toHaveCount(7)
 	})
 
@@ -211,7 +214,7 @@ test.describe("latest and contact", function () {
 
 	test("contact hides empty links and opens the rest in a new tab", async function ({ page }) {
 		await OpenScreen(page, "Contact")
-		await expect(page.locator(".LinkRow")).toHaveCount(2)
+		await expect(page.locator(".LinkRow")).toHaveCount(3)
 		await expect(page.locator(".LinkRow").first()).toContainText("Discord")
 		for (const Row of await page.locator(".LinkRow").all()) {
 			await expect(Row).toHaveAttribute("target", "_blank")

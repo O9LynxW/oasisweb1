@@ -13,6 +13,7 @@ const Types = {
 	".json": "application/json; charset=utf-8",
 	".jpg": "image/jpeg",
 	".png": "image/png",
+	".svg": "image/svg+xml",
 	".mp4": "video/mp4",
 	".mp3": "audio/mpeg",
 }

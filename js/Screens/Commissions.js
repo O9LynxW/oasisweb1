@@ -1,50 +1,45 @@
-import { Create, BuildPage, BuildEmpty, BuildTabs, Wrap } from "../Dom.js"
+import { Create, BuildPage, BuildEmpty, BuildTabs, OpenExternal, Wrap } from "../Dom.js"
 
-const TabLabels = ["BOARD", "RATES", "TERMS"]
-const QuoteText = "every job is quoted on scope, references and deadline, so the tiers are there to show what a job " +
-	"looks like rather than a fixed price list. message me with what you need and i'll give you a number."
+const TabLabels = ["BOARD", "RATES", "PAYMENT"]
+const QuoteText = "price depends on scope, i'll explain any change before starting it."
+const PayPalUrl = "https://paypal.me/oasis098"
 
 const RateGroups = [
 	{
-		Title: "VFX",
-		Detail: "particles, meshes, beams, trails, custom textures",
+		Title: "SCRIPTING",
+		Detail: "same day to a week, depending on the extent of what's needed",
 		Tiers: [
-			{ Name: "Skill VFX", Scope: "ONE MOVE", Note: "a full skill effect with startup, active and impact stages. the standard job for one move.",
-				Points: ["timed multi stage sequence", "custom textures and meshes", "camera shake and sound cues", "2 revisions"] },
-			{ Name: "Advanced", Scope: "BIGGER SKILLS", Note: "heavier skills with more moving parts and longer sequences.",
-				Points: ["beams, projectiles, ground reactions", "custom modelled and textured assets",
-					"multi hit and follow up stages", "3 revisions"] },
-			{ Name: "Moveset Pack", Scope: "4 TO 6 SKILLS", Note: "4 to 6 skills built as one visually consistent kit.",
-				Points: ["shared colour and texture language", "built and delivered as one batch",
-					"bundle rate, well under buying singles"] },
+			{ Name: "One Skill", Price: "$22", Scope: "PER JOB", Note: "front end." },
+			{ Name: "Movement System", Price: "$45", Scope: "PER JOB", Note: "" },
+			{ Name: "Backend Framework", Price: "$110", Scope: "PER JOB", Note: "" },
+			{ Name: "Basic Combat", Price: "$150", Scope: "PACKAGE", Note: "basic attack, heavy attack, block, stun, parry and dodge." },
+			{ Name: "Advanced Combat", Price: "$190", Scope: "PACKAGE",
+				Note: "everything in basic, 50% off extra skills, plus ongoing support for bugs and compatibility." },
 		],
 	},
 	{
-		Title: "SCRIPTING",
-		Detail: "combat, skills, replication, frameworks",
+		Title: "VFX",
+		Detail: "scales with difficulty. no cutscenes",
 		Tiers: [
-			{ Name: "Small Task", Scope: "SAME OR NEXT DAY", Note: "bug fixes and small standalone systems.",
-				Points: ["shops, ui logic, datastore fixes", "works inside your existing codebase"] },
-			{ Name: "Skill", Scope: "UP TO 2 DAYS", Note: "one complete skill, client and server, vfx wired in.",
-				Points: ["server authoritative hitboxes", "cooldowns, stuns, status effects",
-					"replicated animation and effects", "2 revisions"] },
-			{ Name: "System", Scope: "UP TO A WEEK", Note: "a full gameplay system built to fit your game.",
-				Points: ["combat, stamina, blocking, parry", "round systems, inventories, saving", "documented and modular"] },
-			{ Name: "Framework", Scope: "2 TO 3 WEEKS", Note: "a full combat framework other devs can build movesets on.",
-				Points: ["skill and status effect api", "networking and anti exploit layer", "handover docs included",
-					"retainer available"] },
+			{ Name: "One Move", Price: "$10", Scope: "PER MOVE", Note: "or R$5,000 per move." },
 		],
 	},
 ]
 
-const Terms = [
-	"message me on discord with what you need, i quote it there.",
-	"50% upfront, 50% on delivery. larger jobs can be split into milestones.",
-	"robux is paid through a gamepass set high enough to cover the 30% tax.",
-	"usd via paypal goods and services or crypto.",
-	"revisions listed per tier, extra revisions are charged at 20% of the job.",
-	"rush delivery is +50%.",
-	"you own the final assets, i keep the right to show the work in my portfolio.",
+const Currencies = [
+	{ Emoji: "\u{1F4B5}", Icon: null, Name: "USD", Preferred: true },
+	{ Emoji: "\u{1F4B7}", Icon: null, Name: "GBP", Preferred: true },
+	{ Emoji: null, Icon: "media/Icons/Robux.svg", Name: "ROBUX", Preferred: false },
+]
+
+const PaymentRules = [
+	"50% upfront, 50% on delivery.",
+	"paypal is preferred. if it isn't available to you, we can talk about other ways to pay.",
+	"once work on a commission begins, there are no refunds.",
+	"paying in robux? you cover the 30% marketplace tax. R$350 = $1.",
+	"rush delivery is +25%.",
+	"everything is built to match your game's style.",
+	"% work is negotiable.",
 ]
 
 const StatusPills = {
@@ -108,18 +103,18 @@ function BuildBoard() {
 
 function BuildTier(Tier) {
 	const Card = Create("div", "Tier")
-	Card.appendChild(Create("h4", null, Tier.Name))
+	const Head = Create("div", "TierHead")
+	Head.appendChild(Create("h4", null, Tier.Name))
+	Head.appendChild(Create("b", "TierPrice", Tier.Price))
+	Card.appendChild(Head)
 	Card.appendChild(Create("small", null, Tier.Scope))
-	Card.appendChild(Create("p", null, Tier.Note))
-	const List = Create("ul")
-	Tier.Points.forEach(function (Point) { List.appendChild(Create("li", null, Point)) })
-	Card.appendChild(List)
+	if (Tier.Note) Card.appendChild(Create("p", null, Tier.Note))
 	return Card
 }
 
 function BuildRates() {
 	const Quote = Create("p", "Quote")
-	Quote.appendChild(Create("b", null, "pricing is discussed in dms. "))
+	Quote.appendChild(Create("b", null, "dm for inquiries. "))
 	Quote.appendChild(document.createTextNode(QuoteText))
 
 	const Groups = RateGroups.map(function (Group) {
@@ -136,13 +131,36 @@ function BuildRates() {
 	return [Quote, ...Groups]
 }
 
-function BuildTerms() {
-	const List = Create("ol", "Terms")
-	Terms.forEach(function (Term) { List.appendChild(Create("li", null, Term)) })
-	return [List]
+function BuildIcon(Source) {
+	const Icon = Create("img", "PaymentIcon")
+	Icon.src = Source
+	Icon.alt = ""
+	return Icon
 }
 
-const TabBuilders = [BuildBoard, BuildRates, BuildTerms]
+function BuildCurrency(Currency) {
+	const Chip = Create("span", "Currency")
+	if (Currency.Emoji) Chip.appendChild(Create("span", "CurrencyEmoji", Currency.Emoji))
+	if (Currency.Icon) Chip.appendChild(BuildIcon(Currency.Icon))
+	Chip.appendChild(Create("b", null, Currency.Name))
+	if (Currency.Preferred) Chip.appendChild(Create("small", null, "PREFERRED"))
+	return Chip
+}
+
+function BuildPayment() {
+	const Row = Create("div", "Currencies")
+	Currencies.forEach(function (Currency) { Row.appendChild(BuildCurrency(Currency)) })
+
+	const PayPal = OpenExternal(Create("a", "PayPal"), PayPalUrl)
+	PayPal.appendChild(BuildIcon("media/Icons/PayPal.svg"))
+	PayPal.appendChild(document.createTextNode("PAY WITH PAYPAL"))
+
+	const List = Create("ol", "Terms")
+	PaymentRules.forEach(function (Rule) { List.appendChild(Create("li", null, Rule)) })
+	return [Row, PayPal, List]
+}
+
+const TabBuilders = [BuildBoard, BuildRates, BuildPayment]
 
 function PickTab(Index) {
 	ActiveTab = Wrap(Index, TabLabels.length)
@@ -164,7 +182,7 @@ export const Name = "Commissions"
 
 export function Mount(Root, SharedContext) {
 	Context = SharedContext
-	const Body = BuildPage(Root, "Commissions", "PRICING IN DMS")
+	const Body = BuildPage(Root, "Commissions", "DM FOR INQUIRIES")
 	Tabs = BuildTabs(TabLabels, PickTab)
 	Content = Create("div", "CommissionContent")
 	Body.appendChild(Tabs.Row)

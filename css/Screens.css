@@ -66,12 +66,20 @@
 .RateHead span{color:var(--Ice);font-size:14px;letter-spacing:.06em}
 .Tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
 .Tier{background:rgba(4,13,43,.55);border-left:6px solid var(--Cyan);padding:16px 20px}
-.Tier h4{font-family:var(--Display);font-weight:800;font-style:italic;font-size:26px;text-transform:uppercase;line-height:1}
-.Tier small{display:block;font-family:var(--Display);font-weight:700;letter-spacing:.2em;color:var(--Cyan);margin:6px 0 8px;font-size:12px}
-.Tier p{color:var(--Ice);font-size:14px;line-height:1.5;margin-bottom:10px}
-.Tier ul{list-style:none;display:flex;flex-direction:column;gap:4px}
-.Tier li{position:relative;padding-left:16px;font-size:13px;color:var(--Ice)}
-.Tier li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;background:var(--Cyan);transform:rotate(45deg)}
+.TierHead{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.Tier h4{font-family:var(--Display);font-weight:800;font-style:italic;font-size:24px;text-transform:uppercase;line-height:1}
+.TierPrice{font-family:var(--Display);font-weight:900;font-style:italic;font-size:34px;line-height:1;color:var(--White);text-shadow:3px 3px 0 var(--Deep)}
+.Tier small{display:block;font-family:var(--Display);font-weight:700;letter-spacing:.2em;color:var(--Cyan);margin:6px 0 0;font-size:12px}
+.Tier p{color:var(--Ice);font-size:14px;line-height:1.5;margin-top:8px}
+
+.Currencies{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.Currency{display:inline-flex;align-items:center;gap:10px;background:rgba(4,13,43,.55);border-left:6px solid var(--Cyan);padding:8px 18px;font-family:var(--Display)}
+.Currency b{font-weight:800;font-style:italic;font-size:22px}
+.Currency small{font-weight:700;font-size:11px;letter-spacing:.2em;color:var(--Cyan)}
+.CurrencyEmoji{font-size:22px;line-height:1}
+.PaymentIcon{width:22px;height:22px}
+.PayPal{display:inline-flex;align-items:center;gap:12px;margin-bottom:24px;font-family:var(--Display);font-weight:900;font-style:italic;font-size:22px;letter-spacing:.06em;background:var(--PayPal);color:var(--White);padding:6px 30px 6px 22px;clip-path:var(--Slant);transition:background .15s ease}
+.PayPal:hover{background:var(--PayPalHover)}
 
 .Terms{list-style:none;counter-reset:Term;display:flex;flex-direction:column;gap:10px;max-width:760px}
 .Terms li{counter-increment:Term;display:flex;gap:18px;align-items:baseline;color:var(--Ice);line-height:1.5;background:rgba(4,13,43,.45);padding:10px 18px}
