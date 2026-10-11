@@ -1,4 +1,5 @@
 import { ParseClock } from "./WorkClock.js"
+import { SlugFor } from "./Format.js"
 
 const WorkCategories = ["SFX", "VFX", "UI", "Scripting"]
 const GameStatuses = ["Live", "InDevelopment", "Contribution"]
@@ -65,6 +66,8 @@ export function CleanWorks(Payload) {
 		.map(function (Work) {
 			return {
 				Title: Text(Work.Title),
+				Slug: SlugFor(Work.Title),
+				Pinned: Work.Pinned === true,
 				Category: Work.Category,
 				Game: Text(Work.Game),
 				Video: OptionalText(Work.Video),

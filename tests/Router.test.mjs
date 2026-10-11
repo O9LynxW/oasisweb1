@@ -1,6 +1,6 @@
 import { test } from "node:test"
 import Assert from "node:assert/strict"
-import { ScreenFromHash } from "../js/Router.js"
+import { ScreenFromHash, WorkSlugFromHash } from "../js/Router.js"
 
 test("ScreenFromHash maps screen hashes in any case", function () {
 	Assert.equal(ScreenFromHash("#works"), "Works")
@@ -22,4 +22,11 @@ test("ScreenFromHash falls back to the main menu", function () {
 	Assert.equal(ScreenFromHash(""), "Main")
 	Assert.equal(ScreenFromHash(undefined), "Main")
 	Assert.equal(ScreenFromHash("#constructor"), "Main")
+})
+
+test("work links open the works screen and name the clip", function () {
+	Assert.equal(ScreenFromHash("#works/gojo-cutscene"), "Works")
+	Assert.equal(WorkSlugFromHash("#works/gojo-cutscene"), "gojo-cutscene")
+	Assert.equal(WorkSlugFromHash("#works"), null)
+	Assert.equal(WorkSlugFromHash("#games/gojo-cutscene"), null)
 })

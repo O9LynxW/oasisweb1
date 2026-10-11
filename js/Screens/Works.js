@@ -1,6 +1,7 @@
 import { Create, BuildPage, BuildEmpty, BuildTabs, Wrap } from "../Dom.js"
 import { CreateViewer } from "../Viewer.js"
 import { CreateGridFocus } from "../GridFocus.js"
+import { WorkSlugFromHash } from "../Router.js"
 
 const TabCategories = [null, "VFX", "SFX", "UI", "Scripting"]
 const TabLabels = ["ALL", "VFX", "SFX", "UI", "SCRIPTING"]
@@ -38,6 +39,7 @@ function OpenWork(Work) {
 		Meta: [Work.Category.toUpperCase(), Work.Game.toUpperCase()].filter(Boolean).join(" / "),
 		Heading: Work.Title,
 		Note: Work.Note,
+		ShareUrl: Work.Video ? window.location.origin + "/works/" + Work.Slug + "/" : null,
 	})
 }
 
@@ -63,6 +65,8 @@ function BuildTile(Work) {
 		Tile.addEventListener("mouseenter", function () { StartPreview(Tile) })
 		Tile.addEventListener("mouseleave", function () { Preview.pause() })
 	}
+
+	if (Work.Pinned) Tile.appendChild(Create("span", "WorkPin", "PINNED"))
 
 	const Caption = Create("span", "WorkCaption")
 	Caption.appendChild(Create("small", null, Work.Category.toUpperCase()))
@@ -116,6 +120,12 @@ export function Mount(Root, SharedContext) {
 	Body.appendChild(Grid)
 	Root.appendChild(Viewer.Overlay)
 	PickTab(0)
+}
+
+export function OnShow() {
+	const Slug = WorkSlugFromHash(window.location.hash)
+	const Work = Context.Works.find(function (Candidate) { return Candidate.Slug === Slug })
+	if (Work) OpenWork(Work)
 }
 
 export function OnHide() {

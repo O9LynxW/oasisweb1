@@ -14,6 +14,16 @@ export function CreateViewer(Sounds, OnClosed) {
 	Panel.appendChild(Info)
 	Overlay.appendChild(Panel)
 
+	function BuildShare(Url) {
+		const Share = Create("button", "ViewerShare", "COPY LINK")
+		Share.addEventListener("click", function () {
+			navigator.clipboard.writeText(Url)
+				.then(function () { Share.textContent = "COPIED" })
+				.catch(function () { Share.textContent = Url })
+		})
+		return Share
+	}
+
 	function CloseViewer() {
 		if (Overlay.hidden) return false
 		Media.replaceChildren()
@@ -42,6 +52,7 @@ export function CreateViewer(Sounds, OnClosed) {
 		const Details = [Create("small", "ViewerMeta", Item.Meta)]
 		if (Item.Heading) Details.push(Create("h3", "ViewerTitle", Item.Heading))
 		if (Item.Note) Details.push(Create("p", "ViewerNote", Item.Note))
+		if (Item.ShareUrl) Details.push(BuildShare(Item.ShareUrl))
 		Details.push(Close)
 		Media.replaceChildren(Shown)
 		Info.replaceChildren(...Details)

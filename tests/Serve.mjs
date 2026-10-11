@@ -20,7 +20,7 @@ const Types = {
 
 function Resolve(UrlPath) {
 	const Clean = decodeURIComponent(UrlPath.split("?")[0])
-	const Target = Path.join(SiteRoot, Clean === "/" ? "index.html" : Clean)
+	const Target = Path.join(SiteRoot, Clean.endsWith("/") ? Clean + "index.html" : Clean)
 	return Target.startsWith(SiteRoot) ? Target : null
 }
 

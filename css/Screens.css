@@ -5,6 +5,7 @@
 .WorkPreview{opacity:0;transition:opacity .2s ease}
 .WorkTile:hover .WorkPreview{opacity:1}
 .WorkCaption{position:absolute;left:0;right:0;bottom:0;padding:26px 16px 10px;display:flex;flex-direction:column;background:linear-gradient(transparent,rgba(4,13,43,.92));font-family:var(--Display);line-height:1.05}
+.WorkPin{position:absolute;top:10px;left:0;z-index:1;font-family:var(--Display);font-weight:800;font-style:italic;font-size:12px;letter-spacing:.2em;background:var(--Cyan);color:var(--Deep);padding:2px 14px 2px 10px;clip-path:var(--Slant)}
 .WorkCaption small{font-weight:700;font-size:11px;letter-spacing:.24em;color:var(--Cyan)}
 .WorkCaption b{font-weight:800;font-style:italic;font-size:22px;text-transform:uppercase}
 
@@ -21,8 +22,10 @@
 .ViewerMeta{display:block;font-weight:700;letter-spacing:.24em;color:var(--Cyan);font-size:13px}
 .ViewerTitle{font-weight:900;font-style:italic;font-size:clamp(34px,4vw,56px);line-height:.9;text-transform:uppercase;margin-top:8px}
 .ViewerNote{font-family:var(--Body);color:var(--Ice);margin-top:12px;line-height:1.55}
-.ViewerClose{display:inline-block;margin-top:22px;font-family:var(--Display);font-weight:800;font-style:italic;font-size:20px;letter-spacing:.1em;background:var(--White);color:var(--Deep);padding:2px 20px;clip-path:var(--Slant)}
+.ViewerClose,.ViewerShare{display:inline-block;margin-top:22px;font-family:var(--Display);font-weight:800;font-style:italic;font-size:20px;letter-spacing:.1em;background:var(--White);color:var(--Deep);padding:2px 20px;clip-path:var(--Slant)}
+.ViewerShare{background:var(--Cyan);margin-right:12px}
 .ViewerClose:hover{background:var(--Cyan)}
+.ViewerShare:hover{background:var(--White)}
 
 .Games{display:grid;grid-template-columns:minmax(220px,320px) minmax(0,1fr);gap:4vw;max-width:1280px}
 .GameList{display:flex;flex-direction:column;gap:4px}

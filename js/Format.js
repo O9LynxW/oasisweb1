@@ -16,6 +16,10 @@ function TrimDecimal(Value) {
 	return Value.toFixed(1).replace(/\.0$/, "")
 }
 
+export function SlugFor(Title) {
+	return String(Title).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")
+}
+
 export function FormatCount(Value) {
 	if (typeof Value !== "number" || !Number.isFinite(Value)) return "-"
 

@@ -2,6 +2,7 @@
 	"Works": [
 		{
 			"Title": "Gojo Cutscene",
+			"Pinned": true,
 			"Category": "SFX",
 			"Game": "",
 			"Video": "media/Works/GojoCutsceneSfx.mp4",
@@ -11,6 +12,7 @@
 		},
 		{
 			"Title": "Oathbound Scythe Skill (practice)",
+			"Pinned": true,
 			"Category": "Scripting",
 			"Game": "",
 			"Video": "media/Works/OathboundScytheSkill.mp4",

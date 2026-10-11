@@ -13,9 +13,18 @@ const HashScreens = {
 const WipeHalfMs = 300
 const ReducedWipeHalfMs = 20
 
+function HashParts(Hash) {
+	return String(Hash || "").replace(/^#/, "").toLowerCase().split("/")
+}
+
 export function ScreenFromHash(Hash) {
-	const Key = String(Hash || "").replace(/^#/, "").toLowerCase()
+	const Key = HashParts(Hash)[0]
 	return Object.prototype.hasOwnProperty.call(HashScreens, Key) ? HashScreens[Key] : "Main"
+}
+
+export function WorkSlugFromHash(Hash) {
+	const Slug = HashParts(Hash)[1]
+	return ScreenFromHash(Hash) === "Works" && Slug ? Slug : null
 }
 
 function HashFor(Name) {

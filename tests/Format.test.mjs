@@ -1,6 +1,6 @@
 import { test } from "node:test"
 import Assert from "node:assert/strict"
-import { FormatCount, TimeOfDay, FormatDate, FormatPrice } from "../js/Format.js"
+import { FormatCount, TimeOfDay, FormatDate, FormatPrice, SlugFor } from "../js/Format.js"
 
 test("FormatCount shortens large numbers", function () {
 	Assert.equal(FormatCount(818708614), "818.7M")
@@ -33,4 +33,10 @@ test("FormatDate gives month and day", function () {
 test("FormatPrice shows whole dollars plainly and cents when needed", function () {
 	Assert.equal(FormatPrice(75), "$75")
 	Assert.equal(FormatPrice(93.75), "$93.75")
+})
+
+test("SlugFor makes link-safe names", function () {
+	Assert.equal(SlugFor("Gojo Cutscene"), "gojo-cutscene")
+	Assert.equal(SlugFor("Oathbound Scythe Skill (practice)"), "oathbound-scythe-skill-practice")
+	Assert.equal(SlugFor("Mystic / Light"), "mystic-light")
 })

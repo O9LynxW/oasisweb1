@@ -29,6 +29,8 @@ test("CleanWorks drops unknown categories and keeps missing posters as null", fu
 	Assert.equal(Works.length, 1)
 	Assert.equal(Works[0].Title, "Hit")
 	Assert.equal(Works[0].Poster, null)
+	Assert.equal(Works[0].Slug, "hit")
+	Assert.equal(Works[0].Pinned, false)
 })
 
 test("CleanPosts sorts newest first", function () {

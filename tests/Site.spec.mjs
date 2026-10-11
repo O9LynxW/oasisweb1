@@ -214,6 +214,23 @@ test.describe("works", function () {
 		await expect(page.locator("#ScreenMain")).toBeVisible()
 	})
 
+	test("pinned clips are marked", async function ({ page }) {
+		await OpenScreen(page, "Works")
+		await expect(page.locator(".WorkPin")).toHaveCount(2)
+		await expect(page.locator(".WorkTile").first().locator(".WorkPin")).toHaveText("PINNED")
+	})
+
+	test("a share link opens its clip and copy link gives that link back", async function ({ page }) {
+		await page.context().grantPermissions(["clipboard-read", "clipboard-write"])
+		await page.goto("/works/oathbound-scythe-skill-practice/", { waitUntil: "commit" })
+		await expect(page.locator("#ScreenWorks .Viewer")).toBeVisible()
+		await expect(page.locator("#ScreenWorks .ViewerTitle")).toHaveText("Oathbound Scythe Skill (practice)")
+		await page.locator("#ScreenWorks .ViewerShare").click()
+		await expect(page.locator("#ScreenWorks .ViewerShare")).toHaveText("COPIED")
+		const Copied = await page.evaluate(function () { return navigator.clipboard.readText() })
+		expect(Copied).toMatch(/\/works\/oathbound-scythe-skill-practice\/$/)
+	})
+
 	test("a missing works file shows the empty state and other screens still work", async function ({ page }) {
 		await page.route("**/data/Works.json", function (Route) { Route.fulfill({ status: 404, body: "" }) })
 		await OpenScreen(page, "Works")
