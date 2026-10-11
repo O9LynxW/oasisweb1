@@ -33,6 +33,7 @@ UiSounds=(
 )
 
 Clips=(
+	"Local/OathboundScytheSkill.mp4|OathboundScytheSkill|Other"
 	"Local/AizenModePopSfx.mp4|AizenModePopSfx|Sfx"
 	"Local/HachiCleaveSfx.mp4|HachiCleaveSfx|Sfx"
 	"Local/StylisedFlashstepSfx.mp4|StylisedFlashstepSfx|Sfx"

@@ -1,6 +1,42 @@
 {
 	"Works": [
 		{
+			"Title": "Gojo Cutscene",
+			"Category": "SFX",
+			"Game": "",
+			"Video": "media/Works/GojoCutsceneSfx.mp4",
+			"Poster": "media/Works/GojoCutsceneSfx.jpg",
+			"Note": "full sfx design.",
+			"Date": "2026-10-06"
+		},
+		{
+			"Title": "Oathbound Scythe Skill (practice)",
+			"Category": "Scripting",
+			"Game": "",
+			"Video": "media/Works/OathboundScytheSkill.mp4",
+			"Poster": "media/Works/OathboundScytheSkill.jpg",
+			"Note": "vfx by @Henriksen.",
+			"Date": "2026-10-11"
+		},
+		{
+			"Title": "Aizen Mode Pop",
+			"Category": "SFX",
+			"Game": "",
+			"Video": "media/Works/AizenModePopSfx.mp4",
+			"Poster": "media/Works/AizenModePopSfx.jpg",
+			"Note": "build up and release for a mode transformation.",
+			"Date": "2026-10-01"
+		},
+		{
+			"Title": "Hachi Cleave",
+			"Category": "SFX",
+			"Game": "",
+			"Video": "media/Works/HachiCleaveSfx.mp4",
+			"Poster": "media/Works/HachiCleaveSfx.jpg",
+			"Note": "full sound design for a cleave skill.",
+			"Date": "2026-10-07"
+		},
+		{
 			"Title": "Stylised Flashstep",
 			"Category": "SFX",
 			"Game": "",
@@ -35,33 +71,6 @@
 			"Poster": "media/Works/InfernoBeatdownSfx.jpg",
 			"Note": "fire and energy hits for a beatdown combo.",
 			"Date": "2026-10-04"
-		},
-		{
-			"Title": "Hachi Cleave",
-			"Category": "SFX",
-			"Game": "",
-			"Video": "media/Works/HachiCleaveSfx.mp4",
-			"Poster": "media/Works/HachiCleaveSfx.jpg",
-			"Note": "full sound design for a cleave skill.",
-			"Date": "2026-10-07"
-		},
-		{
-			"Title": "Gojo Cutscene",
-			"Category": "SFX",
-			"Game": "",
-			"Video": "media/Works/GojoCutsceneSfx.mp4",
-			"Poster": "media/Works/GojoCutsceneSfx.jpg",
-			"Note": "full sfx design.",
-			"Date": "2026-10-06"
-		},
-		{
-			"Title": "Aizen Mode Pop",
-			"Category": "SFX",
-			"Game": "",
-			"Video": "media/Works/AizenModePopSfx.mp4",
-			"Poster": "media/Works/AizenModePopSfx.jpg",
-			"Note": "build up and release for a mode transformation.",
-			"Date": "2026-10-01"
 		},
 		{
 			"Title": "Wukong Cutscene",

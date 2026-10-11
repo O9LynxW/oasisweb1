@@ -196,7 +196,7 @@ test.describe("player", function () {
 test.describe("works", function () {
 	test("tabs filter the clips", async function ({ page }) {
 		await OpenScreen(page, "Works")
-		await expect(page.locator(".WorkTile")).toHaveCount(17)
+		await expect(page.locator(".WorkTile")).toHaveCount(18)
 		await page.locator(".Tab", { hasText: "SFX" }).click()
 		await expect(page.locator(".WorkTile")).toHaveCount(12)
 	})
@@ -205,8 +205,8 @@ test.describe("works", function () {
 		await OpenScreen(page, "Works")
 		await page.locator(".WorkTile").first().click()
 		await expect(page.locator("#ScreenWorks .Viewer")).toBeVisible()
-		await expect(page.locator("#ScreenWorks .ViewerTitle")).toHaveText("Stylised Flashstep")
-		await expect(page.locator("#ScreenWorks .ViewerMedia video")).toHaveAttribute("src", /StylisedFlashstepSfx\.mp4$/)
+		await expect(page.locator("#ScreenWorks .ViewerTitle")).toHaveText("Gojo Cutscene")
+		await expect(page.locator("#ScreenWorks .ViewerMedia video")).toHaveAttribute("src", /GojoCutsceneSfx\.mp4$/)
 		await page.keyboard.press("Escape")
 		await expect(page.locator("#ScreenWorks .Viewer")).toBeHidden()
 		await expect(page.locator("#ScreenWorks")).toBeVisible()
