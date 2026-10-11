@@ -21,16 +21,8 @@
 			"Date": "2026-10-11"
 		},
 		{
-			"Title": "Aizen Mode Pop",
-			"Category": "SFX",
-			"Game": "",
-			"Video": "media/Works/AizenModePopSfx.mp4",
-			"Poster": "media/Works/AizenModePopSfx.jpg",
-			"Note": "build up and release for a mode transformation.",
-			"Date": "2026-10-01"
-		},
-		{
 			"Title": "Hachi Cleave",
+			"Pinned": true,
 			"Category": "SFX",
 			"Game": "",
 			"Video": "media/Works/HachiCleaveSfx.mp4",
@@ -40,12 +32,22 @@
 		},
 		{
 			"Title": "Stylised Flashstep",
+			"Pinned": true,
 			"Category": "SFX",
 			"Game": "",
 			"Video": "media/Works/StylisedFlashstepSfx.mp4",
 			"Poster": "media/Works/StylisedFlashstepSfx.jpg",
 			"Note": "inspired by black holes.",
 			"Date": "2026-10-09"
+		},
+		{
+			"Title": "Aizen Mode Pop",
+			"Category": "SFX",
+			"Game": "",
+			"Video": "media/Works/AizenModePopSfx.mp4",
+			"Poster": "media/Works/AizenModePopSfx.jpg",
+			"Note": "build up and release for a mode transformation.",
+			"Date": "2026-10-01"
 		},
 		{
 			"Title": "Jinwoo Awakening",
@@ -80,7 +82,7 @@
 			"Game": "",
 			"Video": "media/Works/WukongCutsceneSfx.mp4",
 			"Poster": "media/Works/WukongCutsceneSfx.jpg",
-			"Note": "",
+			"Note": "older work, one of my best.",
 			"Date": "2026-10-01"
 		},
 		{

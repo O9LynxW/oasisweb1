@@ -216,7 +216,7 @@ test.describe("works", function () {
 
 	test("pinned clips are marked", async function ({ page }) {
 		await OpenScreen(page, "Works")
-		await expect(page.locator(".WorkPin")).toHaveCount(2)
+		await expect(page.locator(".WorkPin")).toHaveCount(4)
 		await expect(page.locator(".WorkTile").first().locator(".WorkPin")).toHaveText("PINNED")
 	})
 
